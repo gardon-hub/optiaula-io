@@ -238,7 +238,7 @@ function BarraSuperior({
                 title={m.ayuda}
                 aria-pressed={modo === m.valor}
                 onClick={() => alCambiarModo(m.valor)}
-                className="px-2.5 py-1 text-xs font-bold transition-colors"
+                className="boton-modo"
                 style={
                   modo === m.valor
                     ? { background: 'var(--acento)', color: 'var(--acento-contraste)' }

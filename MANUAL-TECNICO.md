@@ -482,7 +482,7 @@ no la sustituye. Todo texto de un modelo debe mostrarse con `LEYENDA_GENERADO_AU
 
 ```bash
 npm run test        # 535 unitarias
-npm run test:e2e    # 106 de extremo a extremo, escritorio y teléfono
+npm run test:e2e    # 108 de extremo a extremo, escritorio y teléfono
 npm run typecheck   # TypeScript estricto
 npm run lint        # análisis estático
 ```

@@ -50,7 +50,7 @@ npm run build
 | `npm run dev` | Servidor de desarrollo en `http://localhost:5173` |
 | `npm run lint` | Análisis estático con oxlint (ver `.oxlintrc.json`) |
 | `npm run test` | 535 pruebas unitarias del motor matemático y de los datos |
-| `npm run test:e2e` | 106 pruebas de extremo a extremo (escritorio y teléfono) |
+| `npm run test:e2e` | 108 pruebas de extremo a extremo (escritorio y teléfono) |
 | `npm run build` | Compila a `dist/`, verifica tipos y genera el service worker |
 | `npm run preview` | Sirve la compilación de producción |
 | `npm run typecheck` | Verificación de tipos sin compilar |
@@ -158,7 +158,7 @@ src/
   paginas/                 Las 18 pantallas
   export/                  CSV, Excel, JSON, portapapeles, impresión
 pruebas/                   535 pruebas unitarias
-pruebas/e2e/               106 pruebas de extremo a extremo
+pruebas/e2e/               108 pruebas de extremo a extremo
 herramientas/              Generador de iconos de la PWA
 ```
 
@@ -190,7 +190,7 @@ originales, así que las decisiones nunca se encadenan.
 
 ```
 535 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
- 106 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
+ 108 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
   0 errores de TypeScript  modo estricto, con noUncheckedIndexedAccess
 ```
 

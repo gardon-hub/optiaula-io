@@ -322,6 +322,28 @@ a:not(.boton) {
     font-size: 0.8125rem;
   }
 
+  /*
+   * Los botones pequeños miden unos 26 px de alto, cómodos con el ratón y
+   * escasos para un pulgar: Android e iOS piden alrededor de 44. En vez de
+   * decidirlo por el ancho de la pantalla —una tableta apaisada es ancha y se
+   * toca igual— se decide por el tipo de puntero, que es la pregunta real.
+   * Solo crece el área de toque: el texto y los colores no cambian.
+   */
+  @media (pointer: coarse) {
+    .boton-pequeno,
+    .boton-modo {
+      min-height: 2.75rem;
+    }
+  }
+
+  /* Los botones de modo forman un control segmentado y no usan `.boton`. */
+  .boton-modo {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: background-color 120ms ease, color 120ms ease;
+  }
+
   /* Campos */
   .campo {
     width: 100%;

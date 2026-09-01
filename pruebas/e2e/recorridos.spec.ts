@@ -873,6 +873,26 @@ test.describe('accesibilidad y persistencia', () => {
     await expect(page.getByRole('button', { name: /Abrir navegación/ })).toBeVisible();
   });
 
+  test('los controles de la barra superior se pueden pulsar con el pulgar', async ({ page }) => {
+    await abrirLimpio(page);
+
+    // Solo tiene sentido donde el puntero es grueso: con ratón los botones
+    // siguen siendo compactos a propósito, y así lo dice la regla del CSS.
+    const tactil = await page.evaluate(() => matchMedia('(pointer: coarse)').matches);
+    test.skip(!tactil, 'Se comprueba en el proyecto de teléfono, que emula pantalla táctil');
+
+    // 44 px es lo que piden las guías de Android y de iOS. Antes el botón del
+    // menú medía 32 × 26 y los de modo 24 de alto.
+    const bajos = await page.evaluate(() =>
+      [...document.querySelectorAll('header button')]
+        .map((b) => ({ t: (b.textContent ?? '').trim().slice(0, 20), h: b.getBoundingClientRect().height }))
+        .filter((b) => b.h > 0 && b.h < 44)
+        .map((b) => `${b.t}: ${Math.round(b.h)} px`),
+    );
+
+    expect(bajos).toEqual([]);
+  });
+
   test('ninguna pantalla se desplaza en horizontal en un teléfono', async ({ page }) => {
     // El desplazamiento lateral es el defecto clásico del móvil: se lee media
     // frase y hay que arrastrar para ver el resto. Lo causaba que las tarjetas,
