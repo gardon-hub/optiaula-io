@@ -31,9 +31,9 @@ jobs:
   compilar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
@@ -55,7 +55,11 @@ jobs:
         # depender de cuál sea ese nombre.
         run: npm run build
 
-      - uses: actions/upload-pages-artifact@v3
+      # Desde la versión 4 esta acción no incluye los archivos ocultos en el
+      # artefacto. La compilación no genera ninguno, así que no nos afecta; si
+      # algún día hiciera falta uno —un `.nojekyll`, por ejemplo—, habría que
+      # armar el artefacto a mano.
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -67,4 +71,4 @@ jobs:
       url: ${{ steps.despliegue.outputs.page_url }}
     steps:
       - id: despliegue
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
