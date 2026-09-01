@@ -62,31 +62,49 @@ Para las pruebas de extremo a extremo, la primera vez hace falta instalar el nav
 npx playwright install chromium
 ```
 
-## Verla en el teléfono o la tableta
+## Dónde está publicada
 
-Se sirve en la red local y se abre desde el otro dispositivo, conectado a la misma Wi-Fi:
+**https://gardon-hub.github.io/optiaula-io/**
+
+Se abre en cualquier navegador, sin instalar nada. La publicación es automática: cada envío a `main`
+dispara el flujo de `.github/workflows/publicar.yml`, que verifica tipos, pasa el análisis estático y
+corre las 535 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
+línea la versión anterior, que es preferible a una con un cálculo equivocado delante de la clase.
+
+## Instalarla en el teléfono o la tableta
+
+Al abrir la dirección de arriba, el navegador ofrece instalarla:
+
+- **Android (Chrome):** menú ⋮ → «Instalar aplicación» o «Agregar a la pantalla de inicio».
+- **iPhone y iPad (Safari):** botón Compartir → «Agregar a pantalla de inicio».
+- **Computadora (Chrome o Edge):** icono de instalar en la barra de direcciones.
+
+Una vez instalada **funciona sin conexión**: el motor de cálculo, los diagramas, la biblioteca de
+ejercicios y las exportaciones se ejecutan por completo en el aparato. No hace falta señal en el aula.
+
+Los datos de cada persona —perfiles, intentos, progreso— se guardan solo en su propio aparato
+(IndexedDB). No hay servidor, no hay cuentas y nada se envía a ninguna parte.
+
+## Verla en la red local mientras se trabaja
+
+Para probar cambios sin publicar, se sirve en la Wi-Fi de la casa:
 
 ```bash
 npm run dev -- --host
 ```
 
-Vite imprime dos direcciones; la que sirve es la de **Network** (`http://192.168.x.x:5180/`). La de
-`localhost` solo funciona en la computadora. Si el teléfono no carga la página, casi siempre es el
-cortafuegos de Windows bloqueando Node: hay que permitirlo para redes privadas y públicas.
+Vite imprime dos direcciones; la que sirve desde otro aparato es la de **Network**
+(`http://192.168.x.x:5180/`); la de `localhost` solo funciona en la computadora. Si el teléfono no
+carga, suele ser el cortafuegos de Windows bloqueando Node.
 
-Así se ve la aplicación, pero **no se instala**: el service worker exige HTTPS o `localhost`, y una
-dirección IP por HTTP no cumple ninguna de las dos. Para instalarla en el teléfono hay que servir la
-carpeta `dist/` desde un sitio con HTTPS.
+Así se ve, pero **no se instala**: el service worker exige HTTPS o `localhost`, y una dirección IP por
+HTTP no cumple ninguna de las dos. Para instalarla hay que usar la dirección publicada.
 
-## Instalación como aplicación
+## Servirla en otro lugar
 
-Al abrir la aplicación compilada en un navegador moderno aparece la opción «Instalar». Una vez
-instalada funciona sin conexión: el motor de cálculo, los diagramas, la biblioteca y las
-exportaciones se ejecutan por completo en el navegador.
-
-Para desplegarla basta con servir el contenido de `dist/` desde cualquier servidor de archivos
-estáticos. Las rutas usan el fragmento de la URL (`#/`), así que no hace falta configuración de
-reescritura en el servidor.
+Basta con servir el contenido de `dist/` desde cualquier servidor de archivos estáticos con HTTPS.
+Las rutas usan el fragmento de la URL (`#/`), así que no hace falta configuración de reescritura, y
+`base` es relativo, así que funciona igual en la raíz del dominio o en una subcarpeta.
 
 ## Los trece módulos
 

@@ -27,9 +27,22 @@ tercero. En escritorio no cambia nada: encoger solo ocurre cuando falta espacio.
 recorre las veintiocho pantallas a 375 px y exige que ninguna desborde; verificada contra el código
 anterior, donde falla en once.
 
-**Lo que queda:** verla en el teléfono funciona, pero **instalarla** no. El service worker exige
-HTTPS o `localhost`, y una dirección IP de la red local por HTTP no cumple ninguna de las dos. Para
-que se instale en los teléfonos hace falta servir `dist/` desde un sitio con HTTPS.
+### ~~No se podía instalar por falta de HTTPS~~ — publicada
+
+El service worker exige HTTPS o `localhost`, y una dirección IP de la red local por HTTP no cumple
+ninguna de las dos: en el teléfono no aparecía «Instalar» ni funcionaba sin conexión.
+
+Se resolvió publicándola en **https://gardon-hub.github.io/optiaula-io/**, con el flujo
+`.github/workflows/publicar.yml`. La decisión de hacerla pública fue del docente; la alternativa
+—un certificado local con mkcert— habría servido solo en su casa y habría obligado a instalar el
+certificado en cada aparato.
+
+El flujo verifica tipos, pasa el análisis estático y corre las 535 pruebas del motor **antes** de
+publicar. Si algo falla, queda en línea la versión anterior.
+
+Comprobado en el sitio real: contexto seguro, service worker activo con ámbito
+`/optiaula-io/`, los tres iconos del manifiesto responden 200, 82 archivos en caché para el uso sin
+conexión y ninguna pantalla con desplazamiento horizontal a 375 px.
 
 ### ~~El proyecto no tenía linter~~ — incorporado
 
