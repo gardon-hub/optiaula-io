@@ -1,0 +1,78 @@
+{
+  // Configuración de oxlint.
+  //
+  // Por qué oxlint y no ESLint: el proyecto usa TypeScript 7, que es el
+  // compilador nativo y solo publica una API `unstable/*`. `typescript-eslint`
+  // necesita la API del compilador de TypeScript 5 (`createProgram`,
+  // `SourceFile`), que ya no existe en el paquete, así que hoy no puede analizar
+  // este código. oxlint analiza TypeScript y JSX de forma nativa y no depende
+  // del compilador. Cuando typescript-eslint soporte TS 7 conviene revisarlo:
+  // las reglas con información de tipos —que oxlint no tiene— valdrían la pena.
+  //
+  // Cada regla apagada lleva su razón. Ninguna se apagó para bajar el número.
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+
+  "plugins": ["typescript", "unicorn", "oxc", "react", "jsx-a11y", "import", "promise", "vitest"],
+
+  "categories": {
+    "correctness": "error",
+    "suspicious": "off",
+    "perf": "off"
+  },
+
+  "rules": {
+    // El guion bajo es la forma de descartar una clave en una desestructuración
+    // (`const { revision: _, ...resto } = x`). Ahí no usarla es el propósito.
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+
+    // Los botones de acción de una tabla («Editar», «Duplicar») van dentro de un
+    // <div> de composición, un nivel más hondo que la profundidad 2 que la regla
+    // explora por omisión. Tienen texto: lo que falta es alcance, no etiqueta.
+    "jsx-a11y/control-has-associated-label": ["error", { "depth": 4 }],
+
+    // Vitest sí admite `expect(valor, 'mensaje')`; el segundo argumento etiqueta
+    // la aserción y es lo que hace que un fallo diga qué ejercicio falló entre
+    // los 86. La regla viene de Jest, donde esa forma no existe.
+    "vitest/valid-expect": "off",
+
+    // Muchas pruebas del motor afirman propiedades que solo aplican a parte de
+    // la salida (los recursos con sobrante, las columnas básicas). El riesgo de
+    // esta forma es la prueba que no afirma nada porque la condición nunca se
+    // cumple, y de eso se ocupa `vitest/expect-expect`, que queda encendida.
+    "vitest/no-conditional-expect": "off",
+
+    // Las 21 apariciones son `new Array<T>(n).fill(v)`: el genérico explícito y
+    // el `.fill()` inmediato quitan justo la ambigüedad que la regla advierte.
+    // Es la forma más directa de reservar un vector de largo fijo, y el motor
+    // matemático lo hace en cada iteración del húngaro, el simplex y el MODI.
+    "unicorn/no-new-array": "off",
+
+    // Propone sustituir `role` por una etiqueta semántica, pero sus dos casos
+    // aquí son incorrectos: `role="img"` sobre un `<svg>` en línea es la
+    // práctica recomendada —no se puede cambiar por `<img>` sin perder el
+    // gráfico—, y `<output>` no es equivalente a `role="status"`, que es una
+    // región viva y no la salida de un formulario.
+    "jsx-a11y/prefer-tag-over-role": "off",
+
+    // Reglas del React Compiler, que este proyecto no usa. Son advertencias de
+    // estilo, no defectos: las seis apariciones de `set-state-in-effect` son
+    // reinicios de estado al cambiar de ejercicio o de ruta, y las de `purity`
+    // son un `Date.now()` en el inicializador de un `useRef` y otro dentro de un
+    // manejador de evento, que la regla no distingue del cuerpo del render.
+    // Anotado en MEJORAS-FUTURAS: los reinicios podrían pasar a `key`.
+    "react/set-state-in-effect": "off",
+    "react/preserve-manual-memoization": "off",
+    "react/purity": "off",
+
+    // Reglas del transform JSX clásico: con el runtime automático de React 19 no
+    // hay que importar React para usar JSX, y el propio Vite lo configura así.
+    "react/react-in-jsx-scope": "off",
+
+    // Marca `window.location.hash = ...` dentro de un `onClick` como mutación de
+    // una variable externa. Es la navegación de la aplicación, que usa rutas por
+    // hash, y ocurre en un manejador de evento, no durante el render.
+    "react/immutability": "off"
+  },
+
+  "ignorePatterns": ["dist", "dev-dist", "node_modules", "test-results", "playwright-report", "public"]
+}

@@ -1,0 +1,70 @@
+# Compila la aplicación y la publica en GitHub Pages.
+#
+# Se ejecuta en cada envío a `main`. La compilación no se guarda en el
+# repositorio: se genera aquí y se sube directamente a Pages, de modo que lo
+# publicado siempre corresponde al código de esta rama.
+#
+# Antes de publicar corre la verificación completa. Si el motor matemático falla
+# una prueba, no se publica: es preferible dejar en línea la versión anterior
+# que una con un cálculo equivocado delante de los estudiantes.
+
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permite publicar a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si se envían dos cambios seguidos, se publica el último y se cancela el
+# anterior; no tiene sentido publicar una versión que ya quedó atrás.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verificar tipos
+        run: npm run typecheck
+
+      - name: Análisis estático
+        run: npm run lint
+
+      - name: Pruebas del motor
+        run: npm run test
+
+      - name: Compilar
+        # La dirección de Pages incluye el nombre del repositorio como carpeta.
+        # `base` relativo hace que los recursos se resuelvan desde ahí sin
+        # depender de cuál sea ese nombre.
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    needs: compilar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

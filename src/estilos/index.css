@@ -1,0 +1,571 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import 'katex/dist/katex.min.css';
+
+/*
+  Sistema visual de OPTIAULA IO.
+
+  Tres colores con oficio definido:
+    · azul profundo  → rigor académico, navegación, acciones primarias
+    · verde esmeralda → producción y contexto agropecuario, resultados correctos
+    · ámbar           → elementos críticos, ruta crítica, resultados destacados
+
+  Los neutros no son grises puros: llevan un sesgo hacia el azul del sistema en
+  modo oscuro y hacia el papel cálido en modo claro. Fue una elección, no una
+  herencia.
+*/
+
+@theme {
+  --font-titulo: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-cuerpo: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-dato: 'IBM Plex Mono', 'Cascadia Mono', Consolas, monospace;
+
+  --color-primario: #123a5e;
+  --color-primario-fuerte: #0c2942;
+  --color-primario-suave: #e4ecf3;
+  --color-produccion: #0f7a5a;
+  --color-produccion-suave: #e1f2eb;
+  --color-critico: #b7791f;
+  --color-critico-suave: #fbf0da;
+  --color-alerta: #a5322b;
+  --color-alerta-suave: #fbe8e6;
+
+  --radius-tarjeta: 0.625rem;
+}
+
+:root {
+  color-scheme: light;
+
+  --fondo: #faf8f3;
+  --superficie: #ffffff;
+  --superficie-2: #f3efe6;
+  --superficie-3: #eae4d8;
+  --borde: #dfd8c9;
+  --borde-fuerte: #c3b9a5;
+
+  --tinta: #1b1d22;
+  --tinta-media: #4d545f;
+  --tinta-tenue: #6f7684;
+
+  --acento: var(--color-primario);
+  --acento-fuerte: var(--color-primario-fuerte);
+  --acento-suave: var(--color-primario-suave);
+  --acento-contraste: #ffffff;
+
+  --bien: var(--color-produccion);
+  --bien-suave: var(--color-produccion-suave);
+  --avisar: var(--color-critico);
+  --avisar-suave: var(--color-critico-suave);
+  --mal: var(--color-alerta);
+  --mal-suave: var(--color-alerta-suave);
+
+  --sombra-tarjeta: 0 1px 2px rgb(27 29 34 / 0.05), 0 1px 3px rgb(27 29 34 / 0.04);
+  --sombra-elevada: 0 4px 6px -2px rgb(27 29 34 / 0.08), 0 12px 20px -8px rgb(27 29 34 / 0.12);
+
+  --escala-proyeccion: 1;
+}
+
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+
+  --fondo: #11151a;
+  --superficie: #181d24;
+  --superficie-2: #1f262e;
+  --superficie-3: #28313b;
+  --borde: #2f3944;
+  --borde-fuerte: #465464;
+
+  --tinta: #e8eaee;
+  --tinta-media: #a9b2bf;
+  --tinta-tenue: #7f8998;
+
+  --acento: #7fb3e0;
+  --acento-fuerte: #a6cbee;
+  --acento-suave: #1b2a3a;
+  --acento-contraste: #0b1219;
+
+  --bien: #4cc39a;
+  --bien-suave: #12302a;
+  --avisar: #e0ac54;
+  --avisar-suave: #33270f;
+  --mal: #e58279;
+  --mal-suave: #351c1a;
+
+  --sombra-tarjeta: 0 1px 2px rgb(0 0 0 / 0.4);
+  --sombra-elevada: 0 4px 6px -2px rgb(0 0 0 / 0.4), 0 12px 24px -8px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+
+    --fondo: #11151a;
+    --superficie: #181d24;
+    --superficie-2: #1f262e;
+    --superficie-3: #28313b;
+    --borde: #2f3944;
+    --borde-fuerte: #465464;
+
+    --tinta: #e8eaee;
+    --tinta-media: #a9b2bf;
+    --tinta-tenue: #7f8998;
+
+    --acento: #7fb3e0;
+    --acento-fuerte: #a6cbee;
+    --acento-suave: #1b2a3a;
+    --acento-contraste: #0b1219;
+
+    --bien: #4cc39a;
+    --bien-suave: #12302a;
+    --avisar: #e0ac54;
+    --avisar-suave: #33270f;
+    --mal: #e58279;
+    --mal-suave: #351c1a;
+
+    --sombra-tarjeta: 0 1px 2px rgb(0 0 0 / 0.4);
+    --sombra-elevada: 0 4px 6px -2px rgb(0 0 0 / 0.4), 0 12px 24px -8px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* ─────────────────────────────── Base ─────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100% * var(--escala-proyeccion));
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-cuerpo);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-titulo);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0;
+  color: var(--tinta);
+}
+
+h1 { font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.1rem); letter-spacing: -0.015em; }
+h2 { font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem); letter-spacing: -0.01em; }
+h3 { font-size: 1.0625rem; }
+h4 { font-size: 0.9375rem; }
+
+p { margin: 0; }
+
+/* El :not(.boton) es imprescindible, no cosmético. Esta regla vive fuera de
+   toda @layer, y en la cascada lo no estratificado gana a lo estratificado sin
+   importar la especificidad: sin la exclusión, este color pisaría al de
+   .boton-primario —que está en @layer components— y todo enlace con forma de
+   botón quedaría con el texto del mismo color que su fondo. */
+a:not(.boton) {
+  color: var(--acento);
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--acento-suave);
+  color: var(--tinta);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-animaciones='reducidas'] *,
+:root[data-animaciones='reducidas'] *::before,
+:root[data-animaciones='reducidas'] *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ─────────────────────────────── Componentes ─────────────────────────────── */
+
+@layer components {
+  .etiqueta {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--tinta-tenue);
+  }
+
+  .dato {
+    font-family: var(--font-dato);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /*
+   * `min-width: 0` no es decorativo: las tarjetas son elementos de una columna
+   * flexible, y un elemento flexible no se encoge por debajo del ancho mínimo de
+   * su contenido salvo que se le indique. Con una tabla ancha o un diagrama
+   * dentro, la tarjeta crecía más que la pantalla y arrastraba consigo a toda la
+   * página, que quedaba con desplazamiento horizontal en el teléfono. Con esto,
+   * la tarjeta se ajusta al ancho disponible y el `overflow-x` del contenedor de
+   * tablas hace lo suyo: se desplaza la tabla, no la página.
+   */
+  .tarjeta {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-tarjeta);
+    box-shadow: var(--sombra-tarjeta);
+    min-width: 0;
+  }
+
+  .tarjeta-plana {
+    background: var(--superficie-2);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-tarjeta);
+    min-width: 0;
+  }
+
+  /*
+   * Lo mismo para los elementos de una rejilla, y por la misma razón: su ancho
+   * mínimo automático es el de su contenido, de modo que una columna con un
+   * `<select>` de opciones largas —«Probabilidad de terminar en o antes de…»—
+   * se hacía más ancha que el teléfono y arrastraba la página entera. Permitir
+   * que encojan no cambia nada cuando hay espacio.
+   */
+  .grid > * {
+    min-width: 0;
+  }
+
+  /* Botones */
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.44rem 0.85rem;
+    border-radius: 0.4rem;
+    border: 1px solid transparent;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+    /*
+     * El rótulo envuelve si hace falta. La mayoría son de una o dos palabras y
+     * nunca envuelven, pero algunos son una frase entera —los elementos por
+     * clasificar del laboratorio de fundamentos—, y con `nowrap` esos empujaban
+     * la página más allá del ancho del teléfono.
+     */
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  .boton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .boton-primario {
+    background: var(--acento);
+    color: var(--acento-contraste);
+  }
+  .boton-primario:hover:not(:disabled) { background: var(--acento-fuerte); }
+
+  .boton-secundario {
+    background: var(--superficie);
+    border-color: var(--borde-fuerte);
+    color: var(--tinta);
+  }
+  .boton-secundario:hover:not(:disabled) { background: var(--superficie-2); }
+
+  .boton-suave {
+    background: transparent;
+    color: var(--tinta-media);
+  }
+  .boton-suave:hover:not(:disabled) {
+    background: var(--superficie-2);
+    color: var(--tinta);
+  }
+
+  .boton-produccion {
+    background: var(--bien);
+    color: #ffffff;
+  }
+  :root[data-tema='oscuro'] .boton-produccion { color: #06120e; }
+
+  .boton-pequeno {
+    padding: 0.28rem 0.6rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Campos */
+  .campo {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    background: var(--superficie);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 0.375rem;
+    color: var(--tinta);
+    font: inherit;
+    font-size: 0.875rem;
+  }
+
+  .campo:focus {
+    border-color: var(--acento);
+    outline: 2px solid var(--acento-suave);
+    outline-offset: 0;
+  }
+
+  .campo-numero {
+    font-family: var(--font-dato);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .campo-error {
+    border-color: var(--mal);
+    background: var(--mal-suave);
+  }
+
+  /* Tablas con encabezado fijo */
+  .contenedor-tabla {
+    overflow: auto;
+    max-height: 65vh;
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-tarjeta);
+    background: var(--superficie);
+  }
+
+  .tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.8125rem;
+  }
+
+  .tabla thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--superficie-2);
+    border-bottom: 1px solid var(--borde-fuerte);
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--tinta-media);
+    white-space: nowrap;
+  }
+
+  .tabla tbody td {
+    padding: 0.42rem 0.7rem;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: top;
+  }
+
+  .tabla tbody tr:last-child td { border-bottom: none; }
+  .tabla tbody tr:hover td { background: var(--superficie-2); }
+
+  .tabla tfoot td {
+    position: sticky;
+    bottom: 0;
+    background: var(--superficie-2);
+    border-top: 1px solid var(--borde-fuerte);
+    padding: 0.5rem 0.7rem;
+    font-weight: 700;
+  }
+
+  .fila-resaltada td {
+    background: var(--avisar-suave) !important;
+    box-shadow: inset 3px 0 0 var(--avisar);
+  }
+
+  .numero {
+    font-family: var(--font-dato);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* Distintivos */
+  .distintivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    /* Igual que los botones: el distintivo del método es una frase larga. */
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  .distintivo-neutro { background: var(--superficie-3); color: var(--tinta-media); }
+  .distintivo-acento { background: var(--acento-suave); color: var(--acento); border-color: var(--acento); }
+  .distintivo-bien   { background: var(--bien-suave); color: var(--bien); border-color: var(--bien); }
+  .distintivo-avisar { background: var(--avisar-suave); color: var(--avisar); border-color: var(--avisar); }
+  .distintivo-mal    { background: var(--mal-suave); color: var(--mal); border-color: var(--mal); }
+
+  /* Avisos del motor */
+  .aviso {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .aviso-nota   { background: var(--acento-suave); border-color: var(--acento); color: var(--tinta); }
+  .aviso-avisar { background: var(--avisar-suave); border-color: var(--avisar); color: var(--tinta); }
+  .aviso-mal    { background: var(--mal-suave); border-color: var(--mal); color: var(--tinta); }
+  .aviso-bien   { background: var(--bien-suave); border-color: var(--bien); color: var(--tinta); }
+
+  /* Marcador de estado en una franja lateral */
+  .franja {
+    box-shadow: inset 3px 0 0 currentColor;
+    padding-left: 0.85rem;
+  }
+
+  .separador {
+    height: 1px;
+    background: var(--borde);
+    border: none;
+    margin: 0;
+  }
+
+  .prosa p + p { margin-top: 0.7em; }
+  .prosa { max-width: 68ch; }
+  .prosa strong { font-weight: 700; }
+  .prosa code {
+    font-family: var(--font-dato);
+    font-size: 0.9em;
+    background: var(--superficie-2);
+    padding: 0.05em 0.3em;
+    border-radius: 0.25em;
+  }
+  .prosa blockquote {
+    margin: 0.7em 0;
+    padding: 0.5em 0.9em;
+    border-left: 3px solid var(--avisar);
+    background: var(--avisar-suave);
+    border-radius: 0 0.4rem 0.4rem 0;
+  }
+}
+
+/* ─────────────────────────────── Modo proyección ─────────────────────────────── */
+
+:root[data-modo='proyeccion'] {
+  --escala-proyeccion: 1.35;
+}
+
+:root[data-modo='proyeccion'] .ocultar-en-proyeccion {
+  display: none !important;
+}
+
+:root[data-modo='proyeccion'] .tabla {
+  font-size: 1rem;
+}
+
+:root[data-modo='proyeccion'] .contenedor-tabla {
+  max-height: none;
+}
+
+/* ─────────────────────────────── KaTeX ─────────────────────────────── */
+
+.katex {
+  font-size: 1.02em;
+}
+
+.katex-display {
+  margin: 0.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.15em 0;
+}
+
+/* ─────────────────────────────── Impresión ─────────────────────────────── */
+
+@media print {
+  :root {
+    --fondo: #ffffff;
+    --superficie: #ffffff;
+    --superficie-2: #ffffff;
+    --borde: #999999;
+    --tinta: #000000;
+    --tinta-media: #333333;
+    --sombra-tarjeta: none;
+    --sombra-elevada: none;
+  }
+
+  body { font-size: 10.5pt; }
+
+  .ocultar-al-imprimir { display: none !important; }
+
+  .contenedor-tabla {
+    max-height: none;
+    overflow: visible;
+    border: 1px solid #999;
+  }
+
+  .tabla thead th { position: static; }
+  .tabla tfoot td { position: static; }
+
+  .tarjeta, .tarjeta-plana {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #bbb;
+  }
+
+  .salto-pagina { break-before: page; }
+
+  a[href]::after { content: ''; }
+}
+
+/* Animaciones discretas, con propósito pedagógico */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.aparece {
+  animation: aparecer 220ms ease-out both;
+}
+
+@keyframes pulso-critico {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.45; }
+}
+
+.pulso-critico {
+  animation: pulso-critico 1.6s ease-in-out infinite;
+}
