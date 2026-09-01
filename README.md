@@ -18,7 +18,7 @@ resultado en la mano—.
 
 - **13 módulos** con teoría, glosario, fórmulas comentadas, errores frecuentes e interpretación.
 - **86 ejercicios** extraídos de los materiales del curso, con contexto agropecuario y agroindustrial.
-- **10 laboratorios interactivos**, uno por módulo.
+- **13 laboratorios interactivos**, uno por módulo.
 - **4 modos de uso**: estudiante, docente, proyección y evaluación.
 - **Motor de retroalimentación determinista**: reconoce los errores típicos de cada tema y explica
   qué se hizo mal, sin ninguna API de inteligencia artificial.

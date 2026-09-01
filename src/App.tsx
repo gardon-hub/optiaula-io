@@ -198,9 +198,13 @@ function BarraSuperior({
       style={{ background: 'var(--superficie)', borderColor: 'var(--borde)' }}
     >
       <div className="flex flex-wrap items-center gap-3 px-4 py-2.5 sm:px-6">
+        {/* Este botón solo existe en pantallas pequeñas, donde es la única
+            forma de llegar a la navegación, y se pulsa con el pulgar. Con el
+            tamaño de un botón pequeño quedaba en 32 × 26 px; las guías de
+            Android y de iOS piden alrededor de 44. */}
         <button
           type="button"
-          className="boton boton-suave boton-pequeno lg:hidden"
+          className="boton boton-suave boton-pequeno min-h-11 min-w-11 text-base lg:hidden"
           onClick={alAlternarMenu}
           aria-expanded={menuAbierto}
           aria-label={menuAbierto ? 'Cerrar navegación' : 'Abrir navegación'}

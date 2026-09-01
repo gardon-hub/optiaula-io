@@ -38,7 +38,10 @@ export function PaginaInicio(): ReactNode {
         </p>
         <h1>{IDENTIDAD.subtitulo}</h1>
         <p className="prosa" style={{ color: 'var(--tinta-media)' }}>
-          Diez módulos, un laboratorio interactivo por tema y una biblioteca de {tienda.ejercicios.length} ejercicios con
+          {/* El número sale de los datos, como el de ejercicios: escrito a mano
+              decía «Diez» mientras el panel de abajo, en la misma pantalla,
+              contaba trece. */}
+          {TEMAS.length} módulos, un laboratorio interactivo por tema y una biblioteca de {tienda.ejercicios.length} ejercicios con
           contexto agropecuario y agroindustrial. Cada método se explica paso a paso, se puede manipular, y termina en una
           interpretación gerencial: qué decidiría alguien con ese resultado en la mano.
         </p>
