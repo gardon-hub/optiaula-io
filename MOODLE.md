@@ -38,26 +38,49 @@ Se eligió **SCORM 1.2** porque es el único camino que cumple las tres cosas a 
 Además el paquete es autónomo —no pide nada a internet— así que funciona aunque el aula tenga mala
 conexión, y sigue funcionando si algún día el sitio publicado deja de existir.
 
+## Las dos actividades
+
+`npm run moodle` deja dos paquetes, uno por actividad. Se suben igual, pero **no se registran
+igual**, y la diferencia no es un detalle técnico:
+
+| Paquete | Actividad | Qué registra |
+|---|---|---|
+| `optiaula-sistemas-scorm.zip` | Constructor de sistemas: clasificar 18 elementos | **Nota** de 0 a 100, aprueba con 70 |
+| `optiaula-perfil-scorm.zip` | Perfil de operaciones: manufactura y servicios | **Completada**, sin nota |
+
+**Por qué el perfil no lleva nota.** Los valores de referencia de las cuatro organizaciones son
+criterio del docente, no una medición: nadie ha medido que el contacto con el cliente de un comedor
+sea 80 y no 75. Calificar contra ellos convertiría un criterio en clave de respuestas y daría una
+nota de apariencia objetiva sobre números que nadie midió. Queda registrado en la auditoría como
+inconsistencia **I-19**, y por eso el paquete usa `completed` en vez de `passed`: SCORM distingue
+entre las dos cosas.
+
+El perfil se marca completado cuando el estudiante ha perfilado las cuatro organizaciones **y** ha
+contrastado cada una con el criterio del docente. Ese contraste es el acto de aprender que la
+actividad persigue; lo que se califica son las preguntas de interpretación, donde usted las ponga.
+
 ## Cómo subirlo
 
 1. Entre al curso y active **Modo de edición**.
 2. **Añadir una actividad o un recurso** → **Paquete SCORM**.
 3. Póngale nombre, por ejemplo *La cooperativa lechera como sistema operativo*.
-4. En **Paquete**, arrastre el archivo `optiaula-fundamentos-scorm.zip`.
+4. En **Paquete**, arrastre uno de los dos archivos `.zip`.
 5. Guarde. Moodle lee el paquete y lo deja listo.
+
+Repita para el segundo. Son dos actividades distintas, así que van en dos entradas del curso.
 
 Ajustes que conviene revisar, en la misma pantalla:
 
 - **Apariencia → Mostrar paquete:** «Ventana actual» va bien. Si el diseño se ve apretado, «Ventana
   nueva» le da toda la pantalla.
 - **Calificación → Método de calificación:** *Calificación más alta* si quiere que valga el mejor
-  intento, o *Último intento* si quiere el más reciente.
+  intento, o *Último intento* si quiere el más reciente. En el perfil da igual: no envía nota.
 - **Gestión de intentos → Número de intentos:** varios intentos tienen sentido aquí. La actividad
   explica el error después de comprobar, y repetirla es justamente donde se aprende.
 
 ## Qué verá el estudiante
 
-Los 18 elementos de la cooperativa y las cinco categorías del modelo de sistemas. Toca un elemento y
+**En el constructor de sistemas:** los 18 elementos de la cooperativa y las cinco categorías del modelo de sistemas. Toca un elemento y
 luego la categoría; con ratón también puede arrastrarlo; con teclado se recorre con Tab y se toma y
 suelta con Enter. Al comprobar, cada elemento queda marcado como correcto o incorrecto y **se
 explican solo las categorías donde de verdad se equivocó**, no las cinco.
@@ -65,9 +88,15 @@ explican solo las categorías donde de verdad se equivocó**, no las cinco.
 La nota llega sola al libro de calificaciones. Si el estudiante deja la actividad a medias, al volver
 encuentra lo que ya había clasificado.
 
+**En el perfil de operaciones:** cuatro organizaciones y ocho controles deslizantes que van de
+manufactura a servicio. Al mover cualquiera, cambia abajo **lo que ese perfil obliga a hacer**: si el
+producto no se puede guardar, la capacidad se dimensiona al pico; si se puede, el inventario absorbe
+la variación. Ese cambio en vivo es el punto de la actividad. El botón de comparar muestra dónde
+sitúa el docente cada rasgo y por qué, sin decir que el estudiante se equivocó.
+
 ## Si no quiere usar SCORM
 
-En `moodle/contenido/index.html` está el mismo archivo suelto. Se puede subir como recurso
+En `moodle/sistemas/index.html` y `moodle/perfil/index.html` están los mismos archivos sueltos. Se puede subir como recurso
 **Archivo** y funciona igual, con una diferencia: **no registra la calificación**. La propia
 actividad lo avisa en pantalla en lugar de fingir que la guardó.
 
@@ -82,19 +111,20 @@ que usa la aplicación. Si corrige un elemento o cambia un enunciado allí:
 npm run moodle
 ```
 
-Vuelve a dejar el ZIP en `moodle/optiaula-fundamentos-scorm.zip`. Súbalo de nuevo en la misma
-actividad de Moodle y quedará actualizado.
+Vuelve a dejar los dos ZIP en `moodle/`. Súbalos de nuevo en la misma actividad de Moodle y quedarán
+actualizados.
 
 ## Comprobarlo antes de subirlo
 
-`moodle/prueba-lms.html` finge ser Moodle: expone la misma API de SCORM y muestra en un panel cada
-llamada que hace el paquete. Sirve para ver que la nota sale y con qué valor, sin tener que subir
-nada al curso. Ábralo con cualquier servidor de archivos estáticos —no con doble clic, porque el
+`moodle/prueba-sistemas.html` y `moodle/prueba-perfil.html` fingen ser Moodle: exponen la misma API
+de SCORM y muestran en un panel cada llamada que hace el paquete. Sirven para ver qué se registra —una nota en un caso, la marca de completada en el otro— sin tener
+que subir nada al curso. Ábralo con cualquier servidor de archivos estáticos —no con doble clic, porque el
 marco necesita `http://`—.
 
 ## Qué falta
 
-Solo está exportado el laboratorio del **módulo 1**. El generador está escrito alrededor de este tipo
-de actividad —clasificar elementos en categorías—; los otros doce laboratorios son de otra naturaleza
-(tablas de datos, gráficas, procedimientos paso a paso) y cada uno necesitaría su propio exportador.
-Si quiere alguno más, dígalo y se agrega.
+Están exportadas las **dos actividades del módulo 1**. Los otros doce laboratorios son de otra
+naturaleza —tablas de datos editables, gráficas, procedimientos paso a paso— y cada uno necesitaría su
+propio exportador. Lo que sí quedó listo es la base: `herramientas/moodle/comun.mts` ya tiene el
+estilo, el envoltorio de SCORM, el manifiesto, el escritor de ZIP y el banco de pruebas, así que una
+actividad nueva solo escribe su cuerpo y su guion. Si quiere alguna más, dígalo.

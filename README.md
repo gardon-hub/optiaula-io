@@ -49,7 +49,7 @@ npm run build
 | `npm install` | Instala las dependencias |
 | `npm run dev` | Servidor de desarrollo en `http://localhost:5173` |
 | `npm run lint` | Análisis estático con oxlint (ver `.oxlintrc.json`) |
-| `npm run test` | 554 pruebas unitarias del motor matemático y de los datos |
+| `npm run test` | 561 pruebas unitarias del motor matemático y de los datos |
 | `npm run test:e2e` | 112 pruebas de extremo a extremo (escritorio y teléfono) |
 | `npm run build` | Compila a `dist/`, verifica tipos y genera el service worker |
 | `npm run preview` | Sirve la compilación de producción |
@@ -69,7 +69,7 @@ npx playwright install chromium
 
 Se abre en cualquier navegador, sin instalar nada. La publicación es automática: cada envío a `main`
 dispara el flujo de `.github/workflows/publicar.yml`, que verifica tipos, pasa el análisis estático y
-corre las 554 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
+corre las 561 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
 línea la versión anterior, que es preferible a una con un cálculo equivocado delante de la clase.
 
 ## Instalarla en el teléfono o la tableta
@@ -117,7 +117,8 @@ y que además escribe la nota en el libro de calificaciones:
 npm run moodle
 ```
 
-Deja `moodle/optiaula-fundamentos-scorm.zip` listo para subir. El procedimiento completo, las
+Deja dos paquetes listos para subir: el constructor de sistemas, que **sí** califica, y el perfil de
+operaciones, que se registra como completada porque su perfil es un criterio y no una medición. El procedimiento completo, las
 alternativas descartadas y el porqué de cada una están en [MOODLE.md](MOODLE.md).
 
 ## Los trece módulos
@@ -171,7 +172,7 @@ src/
   laboratorios/            Un laboratorio por módulo
   paginas/                 Las 18 pantallas
   export/                  CSV, Excel, JSON, portapapeles, impresión
-pruebas/                   554 pruebas unitarias
+pruebas/                   561 pruebas unitarias
 pruebas/e2e/               112 pruebas de extremo a extremo
 herramientas/              Generador de iconos de la PWA
 ```
@@ -203,7 +204,7 @@ originales, así que las decisiones nunca se encadenan.
 ## Verificación
 
 ```
-554 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
+561 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
  112 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
   0 errores de TypeScript  modo estricto, con noUncheckedIndexedAccess
 ```

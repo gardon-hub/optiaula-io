@@ -18,12 +18,12 @@
  * Deja el resultado en `moodle/optiaula-fundamentos-scorm.zip`.
  */
 
-import { createWriteStream } from 'node:fs';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { deflateRawSync, crc32 } from 'node:zlib';
 
 import { EJERCICIOS_FUNDAMENTOS } from '../src/datos/ejercicios/gestion.ts';
+import { ESTILOS, SCORM_JS, bancoDePruebasHTML, escribirZip, manifiestoXML } from './moodle/comun.mts';
+import { casosDesde, paginaPerfil } from './moodle/perfil.mts';
 
 // ───────────────────────────── Contenido ─────────────────────────────
 
@@ -121,122 +121,7 @@ function paginaHTML(titulo: string, organizacion: string, enunciado: string, ele
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(titulo)}</title>
-<style>
-  /* Sin tipografías ni hojas de estilo externas: dentro de Moodle el paquete
-     puede servirse sin salida a internet, y una fuente que no carga cambia toda
-     la composición. */
-  :root {
-    --papel: #faf8f4;
-    --superficie: #ffffff;
-    --superficie-2: #f4f1ea;
-    --tinta: #1b1d22;
-    --tinta-media: #4d545f;
-    --tinta-tenue: #767d88;
-    --borde: #e2ddd2;
-    --borde-fuerte: #c9c2b4;
-    --acento: #123a5e;
-    --bien: #2f7a52;
-    --bien-suave: #e8f3ec;
-    --mal: #9b2c2c;
-    --mal-suave: #fbeaea;
-    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-tema="claro"]) {
-      --papel: #16181c; --superficie: #1e2126; --superficie-2: #24282e;
-      --tinta: #eceef1; --tinta-media: #a9b0ba; --tinta-tenue: #848b95;
-      --borde: #32373f; --borde-fuerte: #454c56;
-      --acento: #6da3d4; --bien: #6cc08b; --bien-suave: #1d3227;
-      --mal: #e78b8b; --mal-suave: #38211f;
-    }
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 1rem;
-    background: var(--papel); color: var(--tinta);
-    font-family: var(--sans); font-size: 15px; line-height: 1.55;
-  }
-  .envoltura { max-width: 60rem; margin: 0 auto; }
-  h1 { font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; margin: 0 0 .25rem; }
-  h2 { font-family: var(--serif); font-size: 1.15rem; margin: 0 0 .25rem; }
-  .eyebrow {
-    font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--tinta-tenue); margin: 0 0 .35rem;
-  }
-  .tarjeta {
-    background: var(--superficie); border: 1px solid var(--borde);
-    border-radius: .625rem; padding: 1rem; margin-bottom: 1rem; min-width: 0;
-  }
-  .enunciado { background: var(--superficie-2); }
-  .enunciado p { margin: 0 0 .6rem; }
-  .enunciado p:last-child { margin-bottom: 0; }
-
-  /* Barra de estado */
-  .estado { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: .75rem; }
-  .contador {
-    font-weight: 700; font-size: .8125rem; padding: .35rem .7rem;
-    border-radius: 999px; background: var(--superficie-2); color: var(--tinta-media);
-  }
-  .contador.listo { background: var(--bien-suave); color: var(--bien); }
-
-  .boton {
-    font: inherit; font-size: .875rem; font-weight: 700; cursor: pointer;
-    padding: .45rem .85rem; border-radius: .4rem; border: 1px solid var(--borde-fuerte);
-    background: var(--superficie); color: var(--tinta);
-    min-height: 2.75rem; max-width: 100%;
-  }
-  .boton-primario { background: var(--acento); color: #fff; border-color: var(--acento); }
-  .boton:disabled { opacity: .45; cursor: not-allowed; }
-  .boton:focus-visible, .ficha:focus-visible, .zona:focus-visible {
-    outline: 3px solid var(--acento); outline-offset: 2px;
-  }
-
-  /* Fichas */
-  .banco { background: var(--superficie-2); border-radius: .5rem; padding: .75rem; min-height: 3rem; }
-  .fichas { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
-  .ficha {
-    font: inherit; font-size: .8125rem; text-align: left; cursor: grab;
-    padding: .5rem .75rem; border-radius: .4rem;
-    border: 1px solid var(--borde-fuerte); background: var(--superficie); color: var(--tinta);
-    min-height: 2.75rem; max-width: 100%;
-  }
-  .ficha[aria-pressed="true"] {
-    border-color: var(--acento); box-shadow: 0 0 0 2px var(--acento) inset; font-weight: 700;
-  }
-  .ficha.bien { border-color: var(--bien); background: var(--bien-suave); }
-  .ficha.mal { border-color: var(--mal); background: var(--mal-suave); }
-  .marca { font-weight: 700; margin-right: .35rem; }
-
-  /* Zonas */
-  .zonas { display: grid; gap: .75rem; grid-template-columns: 1fr; }
-  @media (min-width: 40rem) { .zonas { grid-template-columns: 1fr 1fr; } }
-  .zonas > * { min-width: 0; }
-  .zona {
-    display: block; width: 100%; text-align: left; font: inherit; cursor: pointer;
-    border: 2px dashed var(--borde-fuerte); border-radius: .5rem; padding: .75rem;
-    background: var(--superficie); color: var(--tinta);
-  }
-  .zona.activa { border-style: solid; border-color: var(--acento); background: var(--superficie-2); }
-  .zona-titulo { font-family: var(--serif); font-weight: 700; font-size: 1rem; }
-  .zona-desc { font-size: .75rem; color: var(--tinta-media); margin: .15rem 0 .5rem; }
-  .zona .fichas { margin-top: .5rem; }
-  .vacia { font-size: .75rem; color: var(--tinta-tenue); font-style: italic; }
-
-  .aviso { border-radius: .4rem; padding: .6rem .75rem; font-size: .8125rem; margin-top: .75rem; }
-  .aviso-bien { background: var(--bien-suave); color: var(--bien); }
-  .aviso-mal { background: var(--mal-suave); color: var(--mal); }
-  .aviso-nota { background: var(--superficie-2); color: var(--tinta-media); }
-  .oculto { display: none !important; }
-  .sr {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
-  ul.explica { margin: .5rem 0 0; padding-left: 1.1rem; font-size: .8125rem; }
-  ul.explica li { margin-bottom: .3rem; }
-  footer { font-size: .75rem; color: var(--tinta-tenue); margin-top: 1rem; }
-</style>
+<style>${ESTILOS}</style>
 </head>
 <body>
 <div class="envoltura">
@@ -286,80 +171,7 @@ function paginaHTML(titulo: string, organizacion: string, enunciado: string, ele
 "use strict";
 var DATOS = ${datos};
 
-/* ─── SCORM 1.2 ───────────────────────────────────────────────────────────
-   Moodle expone el objeto «API» en alguna ventana por encima de esta. Se busca
-   hacia arriba, como indica la especificación. Si no aparece —porque el archivo
-   se abrió suelto, se subió como recurso «Archivo» o se está proyectando en
-   clase— la actividad funciona igual, solo que sin enviar la nota.            */
-var Scorm = (function () {
-  var api = null, iniciado = false, esperaGuardado = null;
-
-  function confirmar() {
-    if (!iniciado) return;
-    try { api.LMSCommit(''); } catch (e) {}
-  }
-
-  function buscar(ventana, saltos) {
-    while (ventana && saltos-- > 0) {
-      if (ventana.API) return ventana.API;
-      if (ventana.parent === ventana) break;
-      ventana = ventana.parent;
-    }
-    return null;
-  }
-
-  function localizar() {
-    var encontrada = buscar(window, 12);
-    if (!encontrada && window.opener) encontrada = buscar(window.opener, 12);
-    return encontrada;
-  }
-
-  return {
-    iniciar: function () {
-      try {
-        api = localizar();
-        if (!api) return false;
-        iniciado = api.LMSInitialize('') === 'true';
-        return iniciado;
-      } catch (e) { return false; }
-    },
-    disponible: function () { return iniciado; },
-    enviarNota: function (crudo, maximo, aprobado) {
-      if (!iniciado) return false;
-      try {
-        api.LMSSetValue('cmi.core.score.min', '0');
-        api.LMSSetValue('cmi.core.score.max', String(maximo));
-        api.LMSSetValue('cmi.core.score.raw', String(crudo));
-        api.LMSSetValue('cmi.core.lesson_status', aprobado ? 'passed' : 'failed');
-        api.LMSCommit('');
-        return true;
-      } catch (e) { return false; }
-    },
-    /*
-     * El valor se anota enseguida, pero el LMSCommit se aplaza: en Moodle
-     * cada uno es una petición al servidor, y guardar en cada movimiento
-     * significaba dieciocho peticiones mientras el estudiante clasifica. Con
-     * una conexión lenta eso se nota. Se confirma dos segundos después del
-     * último cambio, y sin falta al cerrar.
-     */
-    guardar: function (texto) {
-      if (!iniciado) return;
-      try { api.LMSSetValue('cmi.suspend_data', texto); } catch (e) { return; }
-      if (esperaGuardado) clearTimeout(esperaGuardado);
-      esperaGuardado = setTimeout(function () { esperaGuardado = null; confirmar(); }, 2000);
-    },
-    confirmar: confirmar,
-    leer: function () {
-      if (!iniciado) return '';
-      try { return api.LMSGetValue('cmi.suspend_data') || ''; } catch (e) { return ''; }
-    },
-    terminar: function () {
-      if (!iniciado) return;
-      if (esperaGuardado) { clearTimeout(esperaGuardado); esperaGuardado = null; }
-      try { api.LMSCommit(''); api.LMSFinish(''); iniciado = false; } catch (e) {}
-    }
-  };
-})();
+${SCORM_JS}
 
 /* ─── Estado ───────────────────────────────────────────────────────────── */
 var colocaciones = {};   // id de elemento -> id de categoría
@@ -630,205 +442,99 @@ pintar();
 `;
 }
 
-// ───────────────────────────── Manifiesto ─────────────────────────────
-
-function manifiesto(titulo: string): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<manifest identifier="OPTIAULA-FUND-01" version="1.2"
-  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
-  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
-                      http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
-  <metadata>
-    <schema>ADL SCORM</schema>
-    <schemaversion>1.2</schemaversion>
-  </metadata>
-  <organizations default="OPTIAULA-ORG">
-    <organization identifier="OPTIAULA-ORG">
-      <title>${esc(titulo)}</title>
-      <item identifier="ITEM-FUND-01" identifierref="RES-FUND-01" isvisible="true">
-        <title>${esc(titulo)}</title>
-        <adlcp:masteryscore>${NOTA_MINIMA}</adlcp:masteryscore>
-      </item>
-    </organization>
-  </organizations>
-  <resources>
-    <resource identifier="RES-FUND-01" type="webcontent" adlcp:scormtype="sco" href="index.html">
-      <file href="index.html"/>
-    </resource>
-  </resources>
-</manifest>
-`;
-}
-
-// ───────────────────────────── Banco de pruebas ─────────────────────────────
-
-/**
- * Página que finge ser Moodle para comprobar el paquete sin subirlo.
- *
- * Expone un objeto `API` igual al de Moodle y muestra cada llamada que hace el
- * contenido, de modo que se ve si la nota sale y cuántas veces se confirma. No
- * entra en el ZIP: es una herramienta de verificación, no parte del material.
- */
-function bancoDePruebasHTML(): string {
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>Simulacro de Moodle — comprobación del paquete</title>
-<style>
-  body { font: 14px system-ui, sans-serif; margin: 0; display: flex; height: 100vh; }
-  #panel { width: 24rem; padding: 1rem; background: #111; color: #7CFC98; overflow: auto;
-           font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
-  #panel h1 { font-size: 12px; color: #fff; margin: 0 0 .5rem; }
-  #panel div { margin-bottom: 2px; word-break: break-all; }
-  iframe { flex: 1; border: 0; border-left: 1px solid #333; }
-</style>
-</head>
-<body>
-<div id="panel"><h1>Llamadas del paquete a la API de SCORM</h1><div id="registro"></div></div>
-<iframe id="sco" src="contenido/index.html" title="Contenido SCORM"></iframe>
-<script>
-var almacen = {};
-var registro = document.getElementById('registro');
-function anota(t) {
-  var d = document.createElement('div');
-  d.textContent = t;
-  registro.appendChild(d);
-  window.LLAMADAS = (window.LLAMADAS || []).concat([t]);
-}
-window.API = {
-  LMSInitialize: function () { anota('LMSInitialize'); return 'true'; },
-  LMSFinish: function () { anota('LMSFinish'); return 'true'; },
-  LMSGetValue: function (k) { anota('LMSGetValue ' + k); return almacen[k] || ''; },
-  LMSSetValue: function (k, v) { almacen[k] = v; anota('LMSSetValue ' + k + ' = ' + String(v).slice(0, 60)); return 'true'; },
-  LMSCommit: function () { anota('LMSCommit'); return 'true'; },
-  LMSGetLastError: function () { return '0'; },
-  LMSGetErrorString: function () { return ''; },
-  LMSGetDiagnostic: function () { return ''; }
-};
-window.ALMACEN = almacen;
-</script>
-</body>
-</html>
-`;
-}
-
-// ───────────────────────────── Empaquetado ─────────────────────────────
-
-/**
- * Escribe un ZIP mínimo, sin dependencias.
- *
- * Se usa `deflateRaw` porque el formato ZIP guarda el flujo comprimido sin la
- * envoltura de zlib. Las fechas van fijas para que dos ejecuciones con el mismo
- * contenido produzcan archivos idénticos.
- */
-async function escribirZip(destino: string, archivos: readonly { nombre: string; contenido: string }[]): Promise<void> {
-  const partes: Buffer[] = [];
-  const central: Buffer[] = [];
-  let desplazamiento = 0;
-
-  for (const a of archivos) {
-    const nombre = Buffer.from(a.nombre, 'utf8');
-    const crudo = Buffer.from(a.contenido, 'utf8');
-    const comprimido = deflateRawSync(crudo, { level: 9 });
-    const suma = crc32(crudo);
-
-    const local = Buffer.alloc(30);
-    local.writeUInt32LE(0x04034b50, 0);
-    local.writeUInt16LE(20, 4); // versión necesaria
-    local.writeUInt16LE(0x0800, 6); // nombres en UTF-8
-    local.writeUInt16LE(8, 8); // deflate
-    local.writeUInt16LE(0, 10); // hora
-    local.writeUInt16LE(0x0021, 12); // fecha: 1 de enero de 2000
-    local.writeUInt32LE(suma, 14);
-    local.writeUInt32LE(comprimido.length, 18);
-    local.writeUInt32LE(crudo.length, 22);
-    local.writeUInt16LE(nombre.length, 26);
-    local.writeUInt16LE(0, 28);
-
-    partes.push(local, nombre, comprimido);
-
-    const entrada = Buffer.alloc(46);
-    entrada.writeUInt32LE(0x02014b50, 0);
-    entrada.writeUInt16LE(20, 4);
-    entrada.writeUInt16LE(20, 6);
-    entrada.writeUInt16LE(0x0800, 8);
-    entrada.writeUInt16LE(8, 10);
-    entrada.writeUInt16LE(0, 12);
-    entrada.writeUInt16LE(0x0021, 14);
-    entrada.writeUInt32LE(suma, 16);
-    entrada.writeUInt32LE(comprimido.length, 20);
-    entrada.writeUInt32LE(crudo.length, 24);
-    entrada.writeUInt16LE(nombre.length, 28);
-    entrada.writeUInt16LE(0, 30);
-    entrada.writeUInt16LE(0, 32);
-    entrada.writeUInt16LE(0, 34);
-    entrada.writeUInt16LE(0, 36);
-    entrada.writeUInt32LE(0, 38);
-    entrada.writeUInt32LE(desplazamiento, 42);
-    central.push(entrada, nombre);
-
-    desplazamiento += local.length + nombre.length + comprimido.length;
-  }
-
-  const cuerpoCentral = Buffer.concat(central);
-  const fin = Buffer.alloc(22);
-  fin.writeUInt32LE(0x06054b50, 0);
-  fin.writeUInt16LE(0, 4);
-  fin.writeUInt16LE(0, 6);
-  fin.writeUInt16LE(archivos.length, 8);
-  fin.writeUInt16LE(archivos.length, 10);
-  fin.writeUInt32LE(cuerpoCentral.length, 12);
-  fin.writeUInt32LE(desplazamiento, 16);
-  fin.writeUInt16LE(0, 20);
-
-  await new Promise<void>((resolver, rechazar) => {
-    const flujo = createWriteStream(destino);
-    flujo.on('error', rechazar);
-    flujo.on('finish', () => resolver());
-    flujo.end(Buffer.concat([...partes, cuerpoCentral, fin]));
-  });
-}
-
 // ───────────────────────────── Programa ─────────────────────────────
 
-const ejercicio = EJERCICIOS_FUNDAMENTOS.find((e) => e.id === 'fund-01');
-if (ejercicio === undefined) throw new Error('No se encontró el ejercicio fund-01');
+/** Escribe un paquete: los archivos sueltos, el banco de pruebas y el ZIP. */
+async function empaquetar(opciones: {
+  carpeta: string;
+  subcarpeta: string;
+  archivo: string;
+  identificador: string;
+  titulo: string;
+  notaMinima: number | null;
+  html: string;
+}): Promise<string> {
+  const xml = manifiestoXML({
+    identificador: opciones.identificador,
+    titulo: opciones.titulo,
+    notaMinima: opciones.notaMinima,
+  });
 
-const datos = ejercicio.datos as { tipo: 'fundamentos'; organizacion: string; elementos: readonly Elemento[] };
-if (datos.tipo !== 'fundamentos') throw new Error('fund-01 no es un ejercicio de fundamentos');
+  const destino = join(opciones.carpeta, opciones.subcarpeta);
+  await mkdir(destino, { recursive: true });
+
+  // Se dejan también los archivos sueltos: sirven para revisarlos y para
+  // subirlos como recurso «Archivo» si no se quiere usar SCORM.
+  await writeFile(join(destino, 'index.html'), opciones.html, 'utf8');
+  await writeFile(join(destino, 'imsmanifest.xml'), xml, 'utf8');
+  await writeFile(
+    join(opciones.carpeta, `prueba-${opciones.subcarpeta}.html`),
+    bancoDePruebasHTML(opciones.subcarpeta, opciones.titulo),
+    'utf8',
+  );
+
+  const zip = join(opciones.carpeta, opciones.archivo);
+  await escribirZip(zip, [
+    { nombre: 'imsmanifest.xml', contenido: xml },
+    { nombre: 'index.html', contenido: opciones.html },
+  ]);
+  return zip;
+}
+
+const carpeta = join(process.cwd(), 'moodle');
+await rm(carpeta, { recursive: true, force: true });
+await mkdir(carpeta, { recursive: true });
+
+// ── Actividad 1: constructor de sistemas (se califica) ──
+
+const sistemas = EJERCICIOS_FUNDAMENTOS.find((e) => e.id === 'fund-01');
+if (sistemas === undefined) throw new Error('No se encontró el ejercicio fund-01');
+
+const datosSistemas = sistemas.datos as { tipo: 'fundamentos'; organizacion: string; elementos: readonly Elemento[] };
+if (datosSistemas.tipo !== 'fundamentos') throw new Error('fund-01 no es un ejercicio de fundamentos');
 
 // Que las categorías de los elementos existan de verdad: un identificador mal
 // escrito daría un elemento imposible de acertar, y el estudiante no tendría
 // forma de saberlo.
 const conocidas = new Set(CATEGORIAS.map((c) => c.id));
-const huerfanos = datos.elementos.filter((e) => !conocidas.has(e.categoria));
+const huerfanos = datosSistemas.elementos.filter((e) => !conocidas.has(e.categoria));
 if (huerfanos.length > 0) {
   throw new Error(`Elementos con categoría desconocida: ${huerfanos.map((e) => `${e.id} (${e.categoria})`).join(', ')}`);
 }
 
-const html = paginaHTML(ejercicio.titulo, datos.organizacion, ejercicio.enunciado, datos.elementos);
-const xml = manifiesto(ejercicio.titulo);
+const zipSistemas = await empaquetar({
+  carpeta,
+  subcarpeta: 'sistemas',
+  archivo: 'optiaula-sistemas-scorm.zip',
+  identificador: 'OPTIAULA-FUND-01',
+  titulo: sistemas.titulo,
+  notaMinima: NOTA_MINIMA,
+  html: paginaHTML(sistemas.titulo, datosSistemas.organizacion, sistemas.enunciado, datosSistemas.elementos),
+});
 
-const carpeta = join(process.cwd(), 'moodle');
-await rm(carpeta, { recursive: true, force: true });
-await mkdir(join(carpeta, 'contenido'), { recursive: true });
+// ── Actividad 2: perfil de operaciones (no se califica) ──
 
-// Se dejan también los archivos sueltos: sirven para revisarlos y para subirlos
-// como recurso «Archivo» si no se quiere usar SCORM.
-await writeFile(join(carpeta, 'contenido', 'index.html'), html, 'utf8');
-await writeFile(join(carpeta, 'contenido', 'imsmanifest.xml'), xml, 'utf8');
-await writeFile(join(carpeta, 'prueba-lms.html'), bancoDePruebasHTML(), 'utf8');
+const perfil = EJERCICIOS_FUNDAMENTOS.find((e) => e.id === 'fund-03');
+if (perfil === undefined) throw new Error('No se encontró el ejercicio fund-03');
 
-const zip = join(carpeta, 'optiaula-fundamentos-scorm.zip');
-await escribirZip(zip, [
-  { nombre: 'imsmanifest.xml', contenido: xml },
-  { nombre: 'index.html', contenido: html },
-]);
+const casos = casosDesde(perfil.datos as Parameters<typeof casosDesde>[0]);
+if (casos.length === 0) throw new Error('fund-03 no tiene casos para el perfil de operaciones');
 
-console.log('Paquete SCORM generado:');
-console.log('  ' + zip);
-console.log('  ' + join(carpeta, 'contenido', 'index.html') + '  (para abrirlo suelto)');
-console.log(`  ${datos.elementos.length} elementos · ${CATEGORIAS.length} categorías · nota mínima ${NOTA_MINIMA} %`);
+const zipPerfil = await empaquetar({
+  carpeta,
+  subcarpeta: 'perfil',
+  archivo: 'optiaula-perfil-scorm.zip',
+  identificador: 'OPTIAULA-FUND-03',
+  // Sin nota mínima: esta actividad se registra como completada, no calificada.
+  // El porqué está en la cabecera de `moodle/perfil.mts` y en la auditoría I-19.
+  notaMinima: null,
+  titulo: perfil.titulo,
+  html: paginaPerfil(perfil.titulo, perfil.enunciado, casos),
+});
+
+console.log('Paquetes SCORM generados:');
+console.log(`  ${zipSistemas}`);
+console.log(`     ${datosSistemas.elementos.length} elementos · ${CATEGORIAS.length} categorías · nota mínima ${NOTA_MINIMA} %`);
+console.log(`  ${zipPerfil}`);
+console.log(`     ${casos.length} organizaciones · 8 rasgos · sin calificación, se registra como completada`);
+console.log(`  Bancos de prueba: ${join(carpeta, 'prueba-sistemas.html')} y ${join(carpeta, 'prueba-perfil.html')}`);
