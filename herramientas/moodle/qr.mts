@@ -89,10 +89,23 @@ export async function paginaQR(destinos: readonly Destino[]): Promise<string> {
     display: flex;
     flex-direction: column;
   }
-  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2vmin; min-height: 0; }
+  /*
+   * El reparto vertical es lo que hace que esto funcione en cualquier pantalla:
+   * los textos ocupan lo que necesitan y **el código se queda con lo que sobra**.
+   *
+   * Antes el cuadrado del QR medía una fracción fija de la pantalla y no encogía,
+   * así que en una ventana baja el contenido desbordaba y el código terminaba
+   * dibujado encima de la dirección y de los botones. Un proyector no siempre da
+   * 16:9, y la ventana de quien prueba la página casi nunca.
+   */
+  main { flex: 1; display: flex; align-items: stretch; justify-content: center; padding: 2vmin; min-height: 0; }
 
-  .lamina { display: none; flex-direction: column; align-items: center; gap: 1.2vmin; max-height: 100%; }
-  .lamina.activa { display: flex; }
+  .lamina { display: none; }
+  .lamina.activa {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2vmin; width: 100%; min-height: 0;
+  }
+  .lamina.activa > * { max-width: 100%; }
 
   .eyebrow {
     margin: 0; font-size: clamp(11px, 1.4vmin, 20px); font-weight: 700;
@@ -108,12 +121,19 @@ export async function paginaQR(destinos: readonly Destino[]): Promise<string> {
     font-size: clamp(12px, 2vmin, 26px);
   }
   /*
-   * El cuadrado se dimensiona desde el viewport y el SVG lo llena. Se hace así y
-   * no dejando que crezca como elemento flexible porque al SVG se le quitaron el
-   * ancho y el alto para que escalara: sin tamaño intrínseco, dentro de un
-   * contenedor flexible colapsaba a cero y el código no se veía.
+   * El código toma el espacio que dejan los textos y nunca más de 68vmin, para
+   * que en una pantalla muy alta no crezca hasta empequeñecer todo lo demás.
+   *
+   * Al SVG se le quitaron el ancho y el alto para que escalara, así que no tiene
+   * tamaño intrínseco y **necesita que su caja se los dé**: por eso el contenedor
+   * lleva min-height en cero —sin eso un elemento flexible no baja del tamaño de
+   * su contenido— y el SVG va al 100 % de los dos lados. Su preserveAspectRatio
+   * lo mantiene cuadrado y centrado dentro de la caja, sea cual sea su forma.
    */
-  .codigo { width: min(58vmin, 88vw); aspect-ratio: 1; }
+  .codigo {
+    flex: 1 1 auto; min-height: 0; max-height: 68vmin; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
   .codigo svg { display: block; width: 100%; height: 100%; }
   .url {
     margin: 0; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
