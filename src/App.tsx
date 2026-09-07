@@ -3,7 +3,7 @@
  */
 
 import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react';
-import { IDENTIDAD, ubicacionCompleta } from '@/config/identidad';
+import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
 import { NOMBRE_TEMA, NUMERO_MODULO, TEMAS, type Tema } from '@/esquemas';
 import { inconsistenciasPendientes, perfilActual, progresoGeneral, usarTienda, type Modo } from '@/almacen/tienda';
 import { bandejaDeRevision } from '@/nucleo/revision';
@@ -438,7 +438,7 @@ function PieDePagina(): ReactNode {
     <footer className="border-t px-4 py-4 text-xs sm:px-6 ocultar-al-imprimir" style={{ borderColor: 'var(--borde)', color: 'var(--tinta-tenue)' }}>
       <div className="mx-auto flex w-full max-w-[76rem] flex-wrap items-center justify-between gap-2">
         <span>
-          {IDENTIDAD.nombre} v{IDENTIDAD.version} · {IDENTIDAD.autor.titulo} {IDENTIDAD.autor.nombre} ·{' '}
+          {IDENTIDAD.nombre} v{IDENTIDAD.version} · {autorConGrado()} ·{' '}
           {IDENTIDAD.institucion.nombre}, {ubicacionCompleta()}
         </span>
         <span className="flex gap-3">

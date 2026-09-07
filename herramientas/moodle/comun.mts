@@ -324,7 +324,8 @@ export function documentoHTML(d: Documento): string {
 ${d.cuerpo}
 
   <footer>
-    Universidad Nacional de Agricultura · Catacamas, Olancho, Honduras · Investigación de Operaciones.
+    <strong>Investigación de Operaciones</strong> · Profesor Gustavo Alonso Ardón, MSc.<br>
+    Universidad Nacional de Agricultura (UNAG) · Catacamas, Olancho, Honduras.<br>
     Generado desde OPTIAULA IO.
   </footer>
 </div>

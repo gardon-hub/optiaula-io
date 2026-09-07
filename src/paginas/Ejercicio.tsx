@@ -14,7 +14,7 @@ import { nuevoId } from '@/almacen/baseDatos';
 import { enlaces, irA } from '@/rutas';
 import { evaluarRespuesta, resumirIntento, type Evaluacion } from '@/nucleo/retroalimentacion';
 import { formatearNumero } from '@/nucleo/numero';
-import { Distintivo, DistintivosAuditoria, Indicador, Plegable, Tarjeta, TextoFormateado, Vacio } from '@/ui/base';
+import { CreditoAutor, Distintivo, DistintivosAuditoria, Indicador, Plegable, Tarjeta, TextoFormateado, Vacio } from '@/ui/base';
 import { Laboratorio } from '@/laboratorios';
 import { duracionLegible } from '@/export/exportar';
 import { fuentePorId } from '@/datos/fuentes';
@@ -274,6 +274,8 @@ export function PaginaEjercicio({ ejercicioId }: { ejercicioId: string }): React
           Volver a la biblioteca
         </button>
       </div>
+
+      <CreditoAutor origen={ejercicio.origen} />
     </div>
   );
 }

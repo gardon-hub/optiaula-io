@@ -12,7 +12,7 @@ import { NOMBRE_DIFICULTAD, NOMBRE_TEMA, NUMERO_MODULO, type Tema } from '@/esqu
 import { usarTienda } from '@/almacen/tienda';
 import { contenidoDe } from '@/datos/modulos';
 import { enlaces } from '@/rutas';
-import { Distintivo, DistintivosAuditoria, Selector, TextoFormateado, Vacio } from '@/ui/base';
+import { CreditoAutor, Distintivo, DistintivosAuditoria, Selector, TextoFormateado, Vacio } from '@/ui/base';
 import { Laboratorio } from '@/laboratorios';
 
 export function PaginaLaboratorio({ tema }: { tema: Tema }): ReactNode {
@@ -94,6 +94,8 @@ export function PaginaLaboratorio({ tema }: { tema: Tema }): ReactNode {
         Los valores de este laboratorio son editables: modifíquelos y observe el efecto. Cambiarlos aquí no altera el
         ejercicio guardado en la biblioteca.
       </p>
+
+      <CreditoAutor origen={ejercicio.origen} />
     </div>
   );
 }

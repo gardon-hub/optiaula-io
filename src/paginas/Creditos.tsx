@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { IDENTIDAD, ubicacionCompleta } from '@/config/identidad';
+import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
 import { FUENTES } from '@/datos/fuentes';
 import { usarTienda } from '@/almacen/tienda';
 import { NOMBRE_TEMA, TEMAS } from '@/esquemas';
@@ -26,7 +26,7 @@ export function PaginaCreditos(): ReactNode {
     >
       <Tarjeta titulo="Autoría">
         <dl className="grid gap-x-6 gap-y-2 text-[0.875rem] sm:grid-cols-2">
-          <Fila termino="Autor del contenido" valor={`${IDENTIDAD.autor.titulo} ${IDENTIDAD.autor.nombre}`} />
+          <Fila termino="Autor del contenido" valor={autorConGrado()} />
           <Fila termino="Institución" valor={IDENTIDAD.institucion.nombre} />
           <Fila termino="Ubicación" valor={ubicacionCompleta()} />
           <Fila termino="Curso" valor={IDENTIDAD.curso.nombre} />

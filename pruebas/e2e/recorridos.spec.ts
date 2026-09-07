@@ -627,6 +627,25 @@ test('el lote económico reproduce el ejercicio de la presentación', async ({ p
     await expect(page.getByText(/No significa que esté mal/).first()).toBeVisible();
   });
 
+  test('cada ejercicio acredita al autor sin atribuirle lo que no escribió', async ({ page }) => {
+    // El crédito del curso es siempre suyo, pero la procedencia cambia por
+    // ejercicio: los `textual` son transcripción de sus materiales y los
+    // `derivado` se construyeron sobre su marco. Poner «Autor: Fulano» en los
+    // dos por igual sería inventarle una autoría, justo en una aplicación cuyo
+    // compromiso es no inventar autorías.
+    await abrirLimpio(page, '#/ejercicio/equi-01');
+    const credito = page.locator('footer').filter({ hasText: 'Créditos' }).first();
+    await expect(credito).toContainText('Profesor Gustavo Alonso Ardón, MSc.');
+    await expect(credito).toContainText('Universidad Nacional de Agricultura');
+    await expect(credito).toContainText('transcrito de los materiales del curso');
+
+    // El mismo ejercicio derivado dice otra cosa.
+    await navegarEnLaApp(page, '#/ejercicio/fund-03');
+    const otro = page.locator('footer').filter({ hasText: 'Créditos' }).first();
+    await expect(otro).toContainText('Profesor Gustavo Alonso Ardón, MSc.');
+    await expect(otro).toContainText('construido sobre el marco teórico');
+  });
+
   test('la biblioteca filtra por tema', async ({ page }) => {
     await abrirLimpio(page, '#/biblioteca');
 

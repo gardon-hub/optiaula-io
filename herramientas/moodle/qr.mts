@@ -133,6 +133,7 @@ export async function paginaQR(destinos: readonly Destino[]): Promise<string> {
   .boton[aria-pressed="true"] { background: #123a5e; color: #fff; border-color: #123a5e; }
   .boton:focus-visible { outline: 3px solid #123a5e; outline-offset: 2px; }
   .pista { width: 100%; text-align: center; color: #767d88; font-size: clamp(10px, 1.4vmin, 15px); }
+  .credito { width: 100%; text-align: center; color: #4d545f; margin: 0 0 .2rem; font-size: clamp(10px, 1.5vmin, 16px); }
 
   /* Al imprimir sale una hoja por código, para pegarlo en el aula. */
   @media print {
@@ -148,6 +149,7 @@ ${laminas}
 
 <div class="barra">
 ${destinos.map((d, i) => `  <button type="button" class="boton" data-ir="${i}" aria-pressed="${i === 0 ? 'true' : 'false'}">${esc(d.nombre)}</button>`).join('\n')}
+  <p class="credito">Investigación de Operaciones · Profesor Gustavo Alonso Ardón, MSc. · Universidad Nacional de Agricultura, Catacamas, Olancho, Honduras</p>
   <p class="pista">Flechas ← → para cambiar · F para pantalla completa · Ctrl+P imprime una hoja por código</p>
 </div>
 

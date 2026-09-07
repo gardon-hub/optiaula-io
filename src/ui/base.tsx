@@ -8,7 +8,8 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import katex from 'katex';
-import type { Inconsistencia } from '@/esquemas';
+import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
+import type { Inconsistencia, Origen } from '@/esquemas';
 import type { Diagnostico, Gravedad } from '@/nucleo/tipos';
 import { formatearNumero } from '@/nucleo/numero';
 
@@ -98,6 +99,43 @@ export function DistintivosAuditoria({
         </Distintivo>
       )}
     </>
+  );
+}
+
+/**
+ * Crédito de autoría al final de un ejercicio o de una pantalla.
+ *
+ * El matiz que resuelve: **no todos los ejercicios los escribió el autor**. Los
+ * `textual` son transcripción de sus materiales; los `derivado` se construyeron
+ * sobre su marco teórico; los `generado` los produce el generador. Poner
+ * «Autor: Fulano» en los tres por igual sería atribuirle cosas que no escribió,
+ * justo en una aplicación cuyo compromiso es no inventar autorías.
+ *
+ * Así que el crédito del curso es siempre suyo —lo es— y la segunda línea dice
+ * qué es este ejercicio en concreto.
+ */
+export function CreditoAutor({ origen }: { origen?: Origen }): ReactNode {
+  const procedencia: Record<Origen, string> = {
+    textual: 'Ejercicio transcrito de los materiales del curso.',
+    derivado: 'Ejercicio construido sobre el marco teórico del curso.',
+    generado: 'Ejercicio producido por el generador a partir de ese marco.',
+    docente: 'Ejercicio creado por el docente dentro de la aplicación.',
+  };
+
+  return (
+    <footer className="tarjeta-plana flex flex-col gap-1 p-3 text-xs" style={{ color: 'var(--tinta-media)' }}>
+      <p className="etiqueta">Créditos</p>
+      <p>
+        <strong>{IDENTIDAD.curso.nombre}</strong> · {autorConGrado()}
+      </p>
+      <p>
+        {IDENTIDAD.institucion.nombre} ({IDENTIDAD.institucion.siglas}) · {ubicacionCompleta()}
+      </p>
+      {origen !== undefined && <p style={{ color: 'var(--tinta-tenue)' }}>{procedencia[origen]}</p>}
+      {IDENTIDAD.autor.orcid !== null && (
+        <p style={{ color: 'var(--tinta-tenue)' }}>ORCID: {IDENTIDAD.autor.orcid}</p>
+      )}
+    </footer>
   );
 }
 

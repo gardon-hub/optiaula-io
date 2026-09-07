@@ -4,7 +4,7 @@
  */
 
 import { useRef, useState, type ReactNode } from 'react';
-import { IDENTIDAD, ubicacionCompleta } from '@/config/identidad';
+import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
 import { usarTienda } from '@/almacen/tienda';
 import { hayAlmacenamiento } from '@/almacen/baseDatos';
 import { proveedoresDisponibles } from '@/nucleo/asistenteOpcional';
@@ -140,7 +140,7 @@ export function PaginaConfiguracion(): ReactNode {
         <dl className="grid gap-x-6 gap-y-2 text-[0.8125rem] sm:grid-cols-2">
           <Fila termino="Aplicación" valor={`${IDENTIDAD.nombre} v${IDENTIDAD.version}`} />
           <Fila termino="Subtítulo" valor={IDENTIDAD.subtitulo} />
-          <Fila termino="Autor" valor={`${IDENTIDAD.autor.titulo} ${IDENTIDAD.autor.nombre}`} />
+          <Fila termino="Autor" valor={autorConGrado()} />
           <Fila termino="Institución" valor={IDENTIDAD.institucion.nombre} />
           <Fila termino="Ubicación" valor={ubicacionCompleta()} />
           <Fila termino="Idioma" valor="Español" />

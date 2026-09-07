@@ -25,7 +25,15 @@ export interface Identidad {
 
 export interface Autor {
   readonly nombre: string;
+  /** Tratamiento que antecede al nombre: «Profesor», «Ing.», «Lic.». */
   readonly titulo: string;
+  /**
+   * Grado académico obtenido, que va **después** del nombre y separado por coma.
+   * Es un campo aparte del tratamiento porque se escriben en sitios distintos y
+   * porque equivocarlo tiene consecuencias: un grado de más en una publicación
+   * académica es un error que cuesta corregir.
+   */
+  readonly grado: string | null;
   readonly correo: string | null;
   readonly orcid: string | null;
 }
@@ -80,6 +88,10 @@ export const IDENTIDAD: Identidad = {
   autor: {
     nombre: 'Gustavo Alonso Ardón',
     titulo: 'Profesor',
+    grado: 'MSc.',
+    // Se dejan vacíos a propósito: el sitio es público y ninguno de los dos hace
+    // falta para acreditar la autoría. El ORCID (0000-0002-1982-4507) se puede
+    // poner aquí si el autor quiere que aparezca en los créditos.
     correo: null,
     orcid: null,
   },
@@ -123,5 +135,11 @@ export function ubicacionCompleta(i: Identidad = IDENTIDAD): string {
 
 /** Pie de página normalizado para todos los reportes exportables. */
 export function pieDeReporte(i: Identidad = IDENTIDAD): string {
-  return `${i.nombre} v${i.version} · ${i.institucion.nombre} · ${ubicacionCompleta(i)}`;
+  return `${i.nombre} v${i.version} · ${autorConGrado(i)} · ${i.institucion.nombre} · ${ubicacionCompleta(i)}`;
+}
+
+/** «Profesor Fulano, MSc.» — el tratamiento delante y el grado detrás. */
+export function autorConGrado(i: Identidad = IDENTIDAD): string {
+  const { titulo, nombre, grado } = i.autor;
+  return `${titulo} ${nombre}${grado === null ? '' : `, ${grado}`}`;
 }
