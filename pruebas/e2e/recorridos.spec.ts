@@ -590,6 +590,28 @@ test('el lote económico reproduce el ejercicio de la presentación', async ({ p
     await expect(page.getByRole('heading', { name: 'La capacidad se dimensiona al pico, no al promedio' })).toHaveCount(0);
   });
 
+  test('la tabla comparativa no adelanta el criterio del docente', async ({ page }) => {
+    // Mostraba las cuatro organizaciones con su índice desde el principio:
+    // bastaba mirarla para saber la respuesta sin perfilar nada. Cada fila se
+    // revela al comparar esa organización.
+    await abrirLimpio(page, '#/laboratorio/fundamentos');
+    await page.getByLabel('Datos de partida').selectOption('fund-03');
+
+    const tabla = page.getByRole('table');
+    await expect(tabla.getByText('Perfílela y compárela para verlo')).toHaveCount(4);
+    await expect(tabla.getByText('14,4')).toHaveCount(0);
+    await expect(page.getByText(/El más instructivo no es ninguno de los extremos/)).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Comparar con el criterio del docente' }).click();
+
+    // Solo se revela la que comparó.
+    await expect(tabla.getByText('14,4')).toBeVisible();
+    await expect(tabla.getByText('Perfílela y compárela para verlo')).toHaveCount(3);
+    await expect(tabla.getByText('89,4')).toHaveCount(0);
+    // La síntesis también espera: adelanta cuál es el caso interesante y por qué.
+    await expect(page.getByText(/El más instructivo no es ninguno de los extremos/)).toHaveCount(0);
+  });
+
   test('el perfil compara con el criterio del docente sin calificarlo', async ({ page }) => {
     await abrirLimpio(page, '#/laboratorio/fundamentos');
     await page.getByLabel('Datos de partida').selectOption('fund-03');

@@ -211,13 +211,14 @@ export function paginaPerfil(titulo: string, enunciado: string, casos: readonly 
 
   <section class="tarjeta">
     <h2>Compare las cuatro organizaciones</h2>
+    <p class="zona-desc" id="resumen-intro"></p>
     <div class="desplazable">
       <table class="tabla" id="resumen">
         <thead><tr><th>Organización</th><th style="text-align:right">Índice del docente</th><th>Lectura</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
-    <p class="menudo" style="margin-top:.5rem">
+    <p class="menudo oculto" id="resumen-pie" style="margin-top:.5rem">
       El caso más instructivo no es ninguno de los extremos sino la cooperativa: fabrica un bien tangible y almacenable,
       y aun así atiende al cliente cara a cara todos los días.
     </p>
@@ -498,9 +499,14 @@ function pintarCriterio() {
   });
 }
 
+/* La tabla mostraba las cuatro organizaciones con su índice desde el principio:
+   bastaba mirarla para saber la respuesta antes de perfilar nada. Cada fila se
+   revela al comparar esa organización. */
 function pintarResumen() {
   var cuerpo = document.querySelector('#resumen tbody');
   cuerpo.textContent = '';
+  var revelados = 0;
+
   DATOS.casos.forEach(function (c) {
     var fila = document.createElement('tr');
     if (c.id === casoId) fila.style.background = 'var(--superficie-2)';
@@ -509,20 +515,39 @@ function pintarResumen() {
     n.textContent = c.nombre;
     fila.appendChild(n);
 
-    var v = document.createElement('td');
-    v.className = 'numero';
-    v.textContent = num(c.indiceReferencia, 1);
-    fila.appendChild(v);
+    if (comparados[c.id]) {
+      revelados++;
+      var v = document.createElement('td');
+      v.className = 'numero';
+      v.textContent = num(c.indiceReferencia, 1);
+      fila.appendChild(v);
 
-    var l = document.createElement('td');
-    var et = document.createElement('span');
-    et.className = 'marca-tono ' + tonoDe(clasificar(c.indiceReferencia));
-    et.textContent = clasificar(c.indiceReferencia);
-    l.appendChild(et);
-    fila.appendChild(l);
+      var l = document.createElement('td');
+      var et = document.createElement('span');
+      et.className = 'marca-tono ' + tonoDe(clasificar(c.indiceReferencia));
+      et.textContent = clasificar(c.indiceReferencia);
+      l.appendChild(et);
+      fila.appendChild(l);
+    } else {
+      var pendiente = document.createElement('td');
+      pendiente.colSpan = 2;
+      pendiente.style.color = 'var(--tinta-tenue)';
+      pendiente.textContent = 'Perfílela y compárela para verlo';
+      fila.appendChild(pendiente);
+    }
 
     cuerpo.appendChild(fila);
   });
+
+  var pie = document.getElementById('resumen-pie');
+  var todas = revelados === DATOS.casos.length;
+  pie.className = todas ? 'menudo' : 'menudo oculto';
+
+  var intro = document.getElementById('resumen-intro');
+  intro.textContent = todas
+    ? 'Ya perfiló y comparó las cuatro. Ahora la tabla se lee de un vistazo.'
+    : 'Cada organización aparece cuando la haya comparado con el criterio del docente. Lleva ' +
+      revelados + ' de ' + DATOS.casos.length + '.';
 }
 
 function pintar() {

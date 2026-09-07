@@ -126,6 +126,11 @@ Los perfiles de referencia de los cuatro casos son criterio del docente, no medi
 registrados como inconsistencia I-19: la comparación usa una tolerancia de 25 puntos por rasgo y no
 califica el perfil.
 
+La tabla que compara los cuatro casos **revela cada fila cuando el estudiante compara esa
+organización**, no antes. Mostrarlas todas desde el principio dejaba a la vista el índice y la lectura
+de las cuatro: bastaba mirar la tabla para saber la respuesta sin perfilar nada. La síntesis del pie
+espera a que estén las cuatro por lo mismo, porque adelanta cuál es el caso interesante y por qué.
+
 **`grafico.ts`** — Programación lineal de dos variables por enumeración de vértices: se cruzan todos los
 pares de rectas (restricciones más ejes), se descartan los cruces infactibles y se evalúa el objetivo en
 los que quedan. La no acotación se detecta buscando una dirección del cono de recesión que mejore el
@@ -502,7 +507,7 @@ no la sustituye. Todo texto de un modelo debe mostrarse con `LEYENDA_GENERADO_AU
 
 ```bash
 npm run test        # 561 unitarias
-npm run test:e2e    # 112 de extremo a extremo, escritorio y teléfono
+npm run test:e2e    # 114 de extremo a extremo, escritorio y teléfono
 npm run typecheck   # TypeScript estricto
 npm run lint        # análisis estático
 ```

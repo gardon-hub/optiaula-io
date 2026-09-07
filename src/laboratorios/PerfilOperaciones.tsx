@@ -56,6 +56,14 @@ export function PerfilOperaciones({
   const [casoId, setCasoId] = useState<string>(() => casos[0]?.id ?? '');
   const [perfiles, setPerfiles] = useState<Record<string, Perfil>>({});
   const [comparando, setComparando] = useState(false);
+  /**
+   * Organizaciones cuyo criterio del docente ya vio el estudiante.
+   *
+   * La tabla comparativa mostraba las cuatro desde el principio, con su índice y
+   * su lectura: bastaba mirarla para saber la respuesta antes de perfilar nada.
+   * Ahora cada fila se revela cuando se compara esa organización.
+   */
+  const [revelados, setRevelados] = useState<readonly string[]>([]);
 
   const caso = casos.find((c) => c.id === casoId) ?? casos[0] ?? null;
   const perfil = caso === null ? PERFIL_NEUTRO : (perfiles[caso.id] ?? PERFIL_NEUTRO);
@@ -101,7 +109,10 @@ export function PerfilOperaciones({
             <button
               type="button"
               className={`boton boton-pequeno ${comparando ? 'boton-suave' : 'boton-primario'}`}
-              onClick={() => setComparando((v) => !v)}
+              onClick={() => {
+                setComparando((v) => !v);
+                setRevelados((s) => (s.includes(caso.id) ? s : [...s, caso.id]));
+              }}
             >
               {comparando ? 'Ocultar el criterio del docente' : 'Comparar con el criterio del docente'}
             </button>
@@ -286,7 +297,14 @@ export function PerfilOperaciones({
 
       <Interpretacion titulo="Lectura gerencial" texto={resultado.interpretacion} />
 
-      <Tarjeta titulo="Compare los cuatro casos">
+      <Tarjeta
+        titulo="Compare los cuatro casos"
+        descripcion={
+          revelados.length === casos.length
+            ? 'Ya perfiló y comparó las cuatro. Ahora la tabla se lee de un vistazo.'
+            : `Cada organización aparece cuando la haya comparado con el criterio del docente. Lleva ${revelados.length} de ${casos.length}.`
+        }
+      >
         <div className="contenedor-tabla overflow-auto">
           <table className="tabla">
             <thead>
@@ -298,26 +316,40 @@ export function PerfilOperaciones({
             </thead>
             <tbody>
               {casos.map((c) => {
-                const indice =
-                  RASGOS.reduce((s, r) => s + c.perfilReferencia[r.id], 0) / RASGOS.length;
+                const revelado = revelados.includes(c.id);
+                const indice = RASGOS.reduce((s, r) => s + c.perfilReferencia[r.id], 0) / RASGOS.length;
                 const n = clasificar(indice);
                 return (
                   <tr key={c.id} style={c.id === caso.id ? { background: 'var(--superficie-2)' } : undefined}>
                     <td>{c.nombre}</td>
-                    <td className="numero">{formatearNumero(indice, { decimales: 1 })}</td>
-                    <td>
-                      <Distintivo tono={tonoDe(n)}>{NOMBRE_NATURALEZA[n]}</Distintivo>
-                    </td>
+                    {revelado ? (
+                      <>
+                        <td className="numero">{formatearNumero(indice, { decimales: 1 })}</td>
+                        <td>
+                          <Distintivo tono={tonoDe(n)}>{NOMBRE_NATURALEZA[n]}</Distintivo>
+                        </td>
+                      </>
+                    ) : (
+                      <td colSpan={2} className="text-[0.8125rem]" style={{ color: 'var(--tinta-tenue)' }}>
+                        Perfílela y compárela para verlo
+                      </td>
+                    )}
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
-        <p className="mt-2 text-xs" style={{ color: 'var(--tinta-media)' }}>
-          Los cuatro casos cubren el continuo de punta a punta. El más instructivo no es ninguno de los extremos sino la
-          cooperativa: fabrica un bien tangible y almacenable, y aun así atiende al cliente cara a cara todos los días.
-        </p>
+        {/* La síntesis también espera: adelanta que la cooperativa es el caso
+            interesante y por qué, que es justo lo que el estudiante tiene que
+            descubrir perfilándola. */}
+        {revelados.length === casos.length && (
+          <p className="mt-2 text-xs" style={{ color: 'var(--tinta-media)' }}>
+            Los cuatro casos cubren el continuo de punta a punta. El más instructivo no es ninguno de los extremos sino
+            la cooperativa: fabrica un bien tangible y almacenable, y aun así atiende al cliente cara a cara todos los
+            días.
+          </p>
+        )}
       </Tarjeta>
     </div>
   );
