@@ -55,6 +55,7 @@ npm run build
 | `npm run preview` | Sirve la compilación de producción |
 | `npm run typecheck` | Verificación de tipos sin compilar |
 | `npm run iconos` | Regenera los iconos de la PWA |
+| `npm run moodle` | Genera el paquete SCORM para Moodle (ver [MOODLE.md](MOODLE.md)) |
 
 Para las pruebas de extremo a extremo, la primera vez hace falta instalar el navegador:
 
@@ -105,6 +106,19 @@ HTTP no cumple ninguna de las dos. Para instalarla hay que usar la dirección pu
 Basta con servir el contenido de `dist/` desde cualquier servidor de archivos estáticos con HTTPS.
 Las rutas usan el fragmento de la URL (`#/`), así que no hace falta configuración de reescritura, y
 `base` es relativo, así que funciona igual en la raíz del dominio o en una subcarpeta.
+
+## Llevarlo a Moodle
+
+El editor de Moodle borra el JavaScript de lo que pega un docente, así que copiar el HTML de un
+simulador no conserva la interactividad. La salida es un paquete SCORM, que Moodle sirve como archivo
+y que además escribe la nota en el libro de calificaciones:
+
+```bash
+npm run moodle
+```
+
+Deja `moodle/optiaula-fundamentos-scorm.zip` listo para subir. El procedimiento completo, las
+alternativas descartadas y el porqué de cada una están en [MOODLE.md](MOODLE.md).
 
 ## Los trece módulos
 

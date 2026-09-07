@@ -27,3 +27,6 @@ yarn-error.log*
 
 # Configuración local de herramientas (rutas de esta máquina)
 .claude/
+
+# Paquete de Moodle generado (npm run moodle)
+moodle/
