@@ -106,6 +106,17 @@ Los datos de compresión son **campos opcionales de la actividad** —`duracionA
 ruta crítica del material siguen intactos y el panel del laboratorio ni siquiera se dibuja cuando
 `admiteCompresion()` es falso: una tarjeta vacía sería un botón decorativo.
 
+**Barajado de los elementos por clasificar.** En `datos/` los dieciocho elementos de la cooperativa
+están agrupados por categoría, que es como conviene mantenerlos: el docente ve juntas las cuatro
+entradas y las edita sin buscarlas. Pero presentarlos en ese orden dejaba resolver el ejercicio **por
+posición** —las primeras cuatro fichas eran entradas, las cuatro siguientes procesos—, sin leer.
+
+Se baraja en la presentación, con `barajar()` de `nucleo/numero.ts`, y la semilla se fija al montar:
+así el orden **no salta mientras el estudiante clasifica** —fichas que se mueven solas serían
+insufribles— y cambia entre un intento y el siguiente. Reiniciar vuelve a barajar, porque repetir con
+el mismo orden invita a memorizar posiciones en vez de razonar. La prueba no comprueba que el orden
+cambie sino que **deje de estar agrupado**, que es la propiedad que arruinaba el ejercicio.
+
 **`naturalezaOperaciones.ts`** — Módulo 1, el perfil de operaciones. Sitúa una organización en los ocho
 rasgos con los que la bibliografía del curso contrasta manufactura y servicios y devuelve un índice
 de 0 a 100, la lectura del continuo y las **consecuencias operativas** de ese perfil.
@@ -506,7 +517,7 @@ no la sustituye. Todo texto de un modelo debe mostrarse con `LEYENDA_GENERADO_AU
 ## 10. Pruebas
 
 ```bash
-npm run test        # 582 unitarias
+npm run test        # 589 unitarias
 npm run test:e2e    # 116 de extremo a extremo, escritorio y teléfono
 npm run typecheck   # TypeScript estricto
 npm run lint        # análisis estático

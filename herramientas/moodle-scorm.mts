@@ -157,6 +157,22 @@ export function paginaHTML(titulo: string, organizacion: string, enunciado: stri
     guion: `
 var DATOS = ${datos};
 
+/* ─── Orden de presentación ─────────────────────────────────────────────
+   En DATOS los elementos vienen agrupados por categoría, que es como conviene
+   mantenerlos, pero mostrarlos así deja resolver el ejercicio por posición: las
+   primeras fichas serían todas entradas, las siguientes todos procesos. Se
+   baraja una vez al cargar —no en cada dibujado, o las fichas saltarían de
+   sitio mientras el estudiante trabaja— y otra vez al reiniciar.            */
+function barajar(lista) {
+  var copia = lista.slice();
+  for (var i = copia.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = copia[i]; copia[i] = copia[j]; copia[j] = t;
+  }
+  return copia;
+}
+var orden = barajar(DATOS.elementos);
+
 /* ─── Estado ───────────────────────────────────────────────────────────── */
 var colocaciones = {};   // id de elemento -> id de categoría
 var seleccionado = null; // id del elemento tomado
@@ -258,7 +274,7 @@ function ficha(el, ubicado) {
 function pintar() {
   // Banco de elementos sin clasificar
   elBanco.textContent = '';
-  var pendientes = DATOS.elementos.filter(function (e) { return !colocaciones[e.id]; });
+  var pendientes = orden.filter(function (e) { return !colocaciones[e.id]; });
   pendientes.forEach(function (e) {
     var li = document.createElement('li');
     li.appendChild(ficha(e, false));
@@ -289,7 +305,7 @@ function pintar() {
 
     var lista = document.createElement('ul');
     lista.className = 'fichas';
-    var suyos = DATOS.elementos.filter(function (e) { return colocaciones[e.id] === c.id; });
+    var suyos = orden.filter(function (e) { return colocaciones[e.id] === c.id; });
     if (suyos.length === 0) {
       var vacio = document.createElement('p');
       vacio.className = 'vacia';
@@ -395,6 +411,9 @@ function reiniciar() {
   colocaciones = {};
   seleccionado = null;
   verificado = false;
+  // Se baraja de nuevo: repetir con el mismo orden invita a memorizar
+  // posiciones en vez de razonar la clasificación.
+  orden = barajar(DATOS.elementos);
   elResultado.className = 'oculto';
   elResultado.textContent = '';
   guardarProgreso();

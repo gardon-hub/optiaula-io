@@ -7,6 +7,7 @@
  */
 
 import { useMemo, useState, type ReactNode } from 'react';
+import { barajar, generadorSemilla } from '@/nucleo/numero';
 import type { DatosEjercicio } from '@/esquemas';
 import { Distintivo, Indicador, Tarjeta, TextoFormateado } from '@/ui/base';
 import { Interpretacion } from '@/ui/pasos';
@@ -74,18 +75,36 @@ export function LabFundamentos({
   const [textoNuevo, setTextoNuevo] = useState('');
   const [categoriaNueva, setCategoriaNueva] = useState<Categoria>('entrada');
 
-  const sinColocar = datosIniciales.elementos.filter((e) => colocaciones[e.id] == null);
+  /**
+   * Los elementos se presentan barajados.
+   *
+   * En los datos están agrupados por categoría, que es como conviene
+   * escribirlos y mantenerlos, pero mostrarlos así permitía resolver el
+   * ejercicio **por posición**: las primeras cuatro fichas eran entradas, las
+   * cuatro siguientes procesos, y así. Se acertaba sin leer.
+   *
+   * La semilla se fija al montar, de modo que el orden no cambia mientras el
+   * estudiante trabaja —fichas que saltan de sitio al clasificar serían
+   * insufribles— y sí cambia entre un intento y el siguiente.
+   */
+  const [semillaOrden, setSemillaOrden] = useState(() => Math.floor(Math.random() * 2 ** 32));
+  const elementos = useMemo(
+    () => barajar(datosIniciales.elementos, generadorSemilla(semillaOrden)),
+    [datosIniciales.elementos, semillaOrden],
+  );
+
+  const sinColocar = elementos.filter((e) => colocaciones[e.id] == null);
 
   const resumen = useMemo(() => {
-    const colocados = datosIniciales.elementos.filter((e) => colocaciones[e.id] != null);
+    const colocados = elementos.filter((e) => colocaciones[e.id] != null);
     const correctos = colocados.filter((e) => colocaciones[e.id] === e.categoria);
     return {
       colocados: colocados.length,
-      total: datosIniciales.elementos.length,
+      total: elementos.length,
       correctos: correctos.length,
       porcentaje: colocados.length === 0 ? 0 : (correctos.length / colocados.length) * 100,
     };
-  }, [colocaciones, datosIniciales.elementos]);
+  }, [colocaciones, elementos]);
 
   const colocar = (elementoId: string, categoria: Categoria): void => {
     setColocaciones((s) => ({ ...s, [elementoId]: categoria }));
@@ -93,7 +112,7 @@ export function LabFundamentos({
     setArrastrando(null);
   };
 
-  const esModoLibre = datosIniciales.elementos.length === 0;
+  const esModoLibre = elementos.length === 0;
 
   return (
     <div className="flex flex-col gap-5">
@@ -193,7 +212,11 @@ export function LabFundamentos({
             descripcion="Arrastre cada elemento a su categoría, o selecciónelo con Enter y luego elija la categoría destino."
             acciones={
               <div className="flex gap-2">
-                <button type="button" className="boton boton-secundario boton-pequeno" onClick={() => { setColocaciones(Object.fromEntries(datosIniciales.elementos.map((e) => [e.id, null]))); setVerificado(false); }}>
+                <button type="button" className="boton boton-secundario boton-pequeno" onClick={() => {
+                  setColocaciones(Object.fromEntries(datosIniciales.elementos.map((e) => [e.id, null])));
+                  setVerificado(false);
+                  setSemillaOrden(Math.floor(Math.random() * 2 ** 32));
+                }}>
                   Reiniciar
                 </button>
                 <button type="button" className="boton boton-primario boton-pequeno" onClick={() => setVerificado(true)} disabled={sinColocar.length > 0}>
@@ -234,7 +257,7 @@ export function LabFundamentos({
 
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                 {CATEGORIAS.map((c) => {
-                  const dentro = datosIniciales.elementos.filter((e) => colocaciones[e.id] === c.id);
+                  const dentro = elementos.filter((e) => colocaciones[e.id] === c.id);
                   return (
                     <div
                       key={c.id}
@@ -266,7 +289,7 @@ export function LabFundamentos({
                           {/* El nombre lleva la categoría porque es lo que distingue a
                               estos cinco botones entre sí; con solo «aquí», un lector
                               de pantalla los anunciaría idénticos. */}
-                          Colocar «{datosIniciales.elementos.find((e) => e.id === seleccionado)?.texto ?? ''}» en {c.nombre}
+                          Colocar «{elementos.find((e) => e.id === seleccionado)?.texto ?? ''}» en {c.nombre}
                         </button>
                       )}
 
@@ -317,13 +340,13 @@ export function LabFundamentos({
               </div>
 
               <Tarjeta titulo="Elementos mal clasificados">
-                {datosIniciales.elementos.filter((e) => colocaciones[e.id] !== e.categoria).length === 0 ? (
+                {elementos.filter((e) => colocaciones[e.id] !== e.categoria).length === 0 ? (
                   <p className="text-[0.8125rem]" style={{ color: 'var(--bien)' }}>
                     Clasificación perfecta. El modelo de sistemas de esta organización está bien entendido.
                   </p>
                 ) : (
                   <ul className="flex flex-col gap-2">
-                    {datosIniciales.elementos
+                    {elementos
                       .filter((e) => colocaciones[e.id] !== e.categoria)
                       .map((e) => {
                         const puesta = CATEGORIAS.find((c) => c.id === colocaciones[e.id]);

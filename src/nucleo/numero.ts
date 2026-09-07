@@ -225,6 +225,28 @@ export function enteroEntre(azar: () => number, minimo: number, maximo: number):
   return minimo + Math.floor(azar() * (maximo - minimo + 1));
 }
 
+/**
+ * Devuelve una copia barajada, sin tocar el original (Fisher-Yates).
+ *
+ * Existe por un motivo pedagógico, no estético: cuando los elementos de un
+ * ejercicio de clasificar se guardan agrupados por categoría —que es como
+ * conviene escribirlos y mantenerlos—, presentarlos en ese mismo orden deja
+ * resolver el ejercicio **por posición**, sin leer ni un enunciado. Los datos se
+ * conservan ordenados y lo que se baraja es la presentación.
+ *
+ * Recorre de atrás hacia adelante e intercambia con un índice de 0 a i, que es
+ * la forma correcta: sortear un índice sobre todo el arreglo en cada paso
+ * produce permutaciones con probabilidades distintas.
+ */
+export function barajar<T>(lista: readonly T[], azar: () => number): T[] {
+  const copia = [...lista];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(azar() * (i + 1));
+    [copia[i], copia[j]] = [copia[j]!, copia[i]!];
+  }
+  return copia;
+}
+
 /** Convierte una semilla textual en un entero de 32 bits estable. */
 export function semillaDesdeTexto(texto: string): number {
   let h = 2166136261 >>> 0;
