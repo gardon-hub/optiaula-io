@@ -49,6 +49,14 @@ jobs:
       - name: Pruebas del motor
         run: npm run test
 
+      - name: Generar las actividades sueltas
+        # Dejan en `public/actividades/` una página por actividad, que Vite copia
+        # a `dist/`. Es lo que permite enviarlas por enlace —por WhatsApp, por
+        # ejemplo— sin que el estudiante descargue ni descomprima nada. No se
+        # guardan en el repositorio: se generan aquí, así que lo publicado
+        # siempre corresponde al código de esta rama.
+        run: npm run moodle
+
       - name: Compilar
         # La dirección de Pages incluye el nombre del repositorio como carpeta.
         # `base` relativo hace que los recursos se resuelvan desde ahí sin

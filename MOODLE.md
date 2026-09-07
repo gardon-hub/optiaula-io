@@ -94,6 +94,24 @@ producto no se puede guardar, la capacidad se dimensiona al pico; si se puede, e
 la variación. Ese cambio en vivo es el punto de la actividad. El botón de comparar muestra dónde
 sitúa el docente cada rasgo y por qué, sin decir que el estudiante se equivocó.
 
+## Enviarla por WhatsApp o por enlace
+
+**El ZIP no sirve para eso.** Un paquete SCORM es un formato para plataformas: el estudiante tendría
+que descargarlo, descomprimirlo y abrir un archivo suelto, cosa que en un teléfono casi nadie hace.
+
+Lo que sí funciona es **enviar el enlace**. Cada actividad está publicada también como página suelta:
+
+- Perfil de operaciones: <https://gardon-hub.github.io/optiaula-io/actividades/perfil/>
+- Constructor de sistemas: <https://gardon-hub.github.io/optiaula-io/actividades/sistemas/>
+
+Se abren de un toque, sin descargar ni instalar nada, y funcionan igual en teléfono que en
+computadora. La diferencia con la versión de Moodle es que **no queda registro**: la actividad avisa
+en pantalla que no se guarda la calificación. Sirve para practicar, para proyectar en clase o para
+mandar antes de la sesión; lo que se califica sigue estando en Moodle.
+
+Las páginas se generan con `npm run moodle` en `public/actividades/`, y el flujo de publicación las
+regenera en cada envío, así que el enlace siempre muestra la versión actual.
+
 ## Si no quiere usar SCORM
 
 En `moodle/sistemas/index.html` y `moodle/perfil/index.html` están los mismos archivos sueltos. Se puede subir como recurso

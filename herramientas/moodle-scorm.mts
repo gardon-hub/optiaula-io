@@ -444,6 +444,20 @@ pintar();
 
 // ───────────────────────────── Programa ─────────────────────────────
 
+/**
+ * Además del paquete, cada actividad se publica como página suelta en el sitio.
+ *
+ * Es lo que permite mandarla por WhatsApp: un ZIP de SCORM no se puede abrir en
+ * un teléfono —hay que descomprimirlo y no tiene sentido fuera de una
+ * plataforma—, pero un enlace se abre de un toque. La misma página, sin
+ * descargar nada.
+ *
+ * Se genera en `public/`, que Vite copia a `dist/`, y no se guarda en el
+ * repositorio: el flujo de publicación ejecuta `npm run moodle` antes de
+ * compilar, así que lo publicado siempre corresponde al código.
+ */
+const SITIO = join(process.cwd(), 'public', 'actividades');
+
 /** Escribe un paquete: los archivos sueltos, el banco de pruebas y el ZIP. */
 async function empaquetar(opciones: {
   carpeta: string;
@@ -478,12 +492,19 @@ async function empaquetar(opciones: {
     { nombre: 'imsmanifest.xml', contenido: xml },
     { nombre: 'index.html', contenido: opciones.html },
   ]);
+
+  // La misma página, publicada para poder enviarla por enlace.
+  const enSitio = join(SITIO, opciones.subcarpeta);
+  await mkdir(enSitio, { recursive: true });
+  await writeFile(join(enSitio, 'index.html'), opciones.html, 'utf8');
+
   return zip;
 }
 
 const carpeta = join(process.cwd(), 'moodle');
 await rm(carpeta, { recursive: true, force: true });
 await mkdir(carpeta, { recursive: true });
+await rm(SITIO, { recursive: true, force: true });
 
 // ── Actividad 1: constructor de sistemas (se califica) ──
 

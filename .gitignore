@@ -30,3 +30,6 @@ yarn-error.log*
 
 # Paquete de Moodle generado (npm run moodle)
 /moodle/
+
+# Actividades sueltas generadas por npm run moodle
+/public/actividades/
