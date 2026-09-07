@@ -22,7 +22,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { EJERCICIOS_FUNDAMENTOS } from '../src/datos/ejercicios/gestion.ts';
-import { ESTILOS, SCORM_JS, bancoDePruebasHTML, escribirZip, manifiestoXML } from './moodle/comun.mts';
+import { bancoDePruebasHTML, documentoHTML, escribirZip, manifiestoXML } from './moodle/comun.mts';
 import { casosDesde, paginaPerfil } from './moodle/perfil.mts';
 import { paginaQR, svgDe, type Destino } from './moodle/qr.mts';
 
@@ -103,7 +103,7 @@ function conNegritas(t: string): string {
 
 // ───────────────────────────── Documento ─────────────────────────────
 
-function paginaHTML(titulo: string, organizacion: string, enunciado: string, elementos: readonly Elemento[]): string {
+export function paginaHTML(titulo: string, organizacion: string, enunciado: string, elementos: readonly Elemento[]): string {
   const datos = JSON.stringify({
     elementos: elementos.map((e) => ({ id: e.id, texto: e.texto, categoria: e.categoria })),
     categorias: CATEGORIAS.map((c) => ({ id: c.id, nombre: c.nombre, descripcion: c.descripcion, color: c.color })),
@@ -116,23 +116,15 @@ function paginaHTML(titulo: string, organizacion: string, enunciado: string, ele
     .map((p) => `<p>${conNegritas(p).replace(/\n/g, '<br>')}</p>`)
     .join('\n      ');
 
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(titulo)}</title>
-<style>${ESTILOS}</style>
-</head>
-<body>
-<div class="envoltura">
-
-  <header class="tarjeta">
-    <p class="eyebrow">Módulo 1 · Fundamentos de gestión de operaciones</p>
-    <h1>${esc(titulo)}</h1>
-    <p class="zona-desc" style="margin-top:.35rem">${esc(organizacion)}</p>
-  </header>
-
+  // El documento lo arma `documentoHTML`, compartido con las demás
+  // actividades. Antes esta página construía el suyo entero, con su propio pie:
+  // al añadir el crédito del autor se actualizó el compartido y esta copia se
+  // quedó sin él. Una sola plantilla evita que vuelva a pasar.
+  return documentoHTML({
+    titulo,
+    eyebrow: 'Módulo 1 · Fundamentos de gestión de operaciones',
+    subtitulo: organizacion,
+    cuerpo: `
   <section class="tarjeta enunciado">
     ${parrafos}
   </section>
@@ -161,18 +153,9 @@ function paginaHTML(titulo: string, organizacion: string, enunciado: string, ele
     <div id="resultado" class="oculto"></div>
     <p class="sr" role="status" aria-live="polite" id="anuncio"></p>
   </section>
-
-  <footer>
-    Universidad Nacional de Agricultura · Catacamas, Olancho, Honduras · Investigación de Operaciones.
-    Generado desde OPTIAULA IO.
-  </footer>
-</div>
-
-<script>
-"use strict";
+`,
+    guion: `
 var DATOS = ${datos};
-
-${SCORM_JS}
 
 /* ─── Estado ───────────────────────────────────────────────────────────── */
 var colocaciones = {};   // id de elemento -> id de categoría
@@ -437,10 +420,8 @@ if (guardado) {
   } catch (e) {}
 }
 pintar();
-</script>
-</body>
-</html>
-`;
+`,
+  });
 }
 
 // ───────────────────────────── Programa ─────────────────────────────
@@ -521,7 +502,7 @@ if (datosSistemas.tipo !== 'fundamentos') throw new Error('fund-01 no es un ejer
 // Que las categorías de los elementos existan de verdad: un identificador mal
 // escrito daría un elemento imposible de acertar, y el estudiante no tendría
 // forma de saberlo.
-const conocidas = new Set(CATEGORIAS.map((c) => c.id));
+const conocidas: ReadonlySet<string> = new Set(CATEGORIAS.map((c) => c.id));
 const huerfanos = datosSistemas.elementos.filter((e) => !conocidas.has(e.categoria));
 if (huerfanos.length > 0) {
   throw new Error(`Elementos con categoría desconocida: ${huerfanos.map((e) => `${e.id} (${e.categoria})`).join(', ')}`);
