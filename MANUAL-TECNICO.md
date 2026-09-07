@@ -506,7 +506,7 @@ no la sustituye. Todo texto de un modelo debe mostrarse con `LEYENDA_GENERADO_AU
 ## 10. Pruebas
 
 ```bash
-npm run test        # 561 unitarias
+npm run test        # 566 unitarias
 npm run test:e2e    # 114 de extremo a extremo, escritorio y teléfono
 npm run typecheck   # TypeScript estricto
 npm run lint        # análisis estático

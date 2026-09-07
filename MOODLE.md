@@ -112,6 +112,22 @@ mandar antes de la sesión; lo que se califica sigue estando en Moodle.
 Las páginas se generan con `npm run moodle` en `public/actividades/`, y el flujo de publicación las
 regenera en cada envío, así que el enlace siempre muestra la versión actual.
 
+## Proyectar en clase
+
+Hay una página con los códigos QR de las tres direcciones, pensada para el cañón:
+
+<https://gardon-hub.github.io/optiaula-io/actividades/qr/>
+
+Se cambia de código con las flechas o con los botones de abajo, **F** la pone a pantalla completa y
+**Ctrl+P** imprime una hoja por código, para pegarla en el aula.
+
+Los códigos sueltos, por si prefiere pegarlos en una diapositiva, quedan en `moodle/qr/` como SVG:
+`perfil.svg`, `sistemas.svg` y `app.svg`. Son vectoriales, así que se agrandan sin pixelarse.
+
+Se generan con `npm run moodle`, sin llamar a ningún servicio: un QR pedido a una API dejaría de
+funcionar el día que el aula no tenga internet, que es justo cuando hace falta. Van con corrección de
+errores alta (nivel Q, 25 %), que es lo que aguanta la deformación del proyector y una sombra encima.
+
 ## Si no quiere usar SCORM
 
 En `moodle/sistemas/index.html` y `moodle/perfil/index.html` están los mismos archivos sueltos. Se puede subir como recurso

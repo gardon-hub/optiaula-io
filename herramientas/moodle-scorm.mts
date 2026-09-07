@@ -24,6 +24,7 @@ import { join } from 'node:path';
 import { EJERCICIOS_FUNDAMENTOS } from '../src/datos/ejercicios/gestion.ts';
 import { ESTILOS, SCORM_JS, bancoDePruebasHTML, escribirZip, manifiestoXML } from './moodle/comun.mts';
 import { casosDesde, paginaPerfil } from './moodle/perfil.mts';
+import { paginaQR, svgDe, type Destino } from './moodle/qr.mts';
 
 // ───────────────────────────── Contenido ─────────────────────────────
 
@@ -458,6 +459,9 @@ pintar();
  */
 const SITIO = join(process.cwd(), 'public', 'actividades');
 
+/** Dónde vive el sitio. Es lo que codifican los códigos QR. */
+const BASE_PUBLICA = 'https://gardon-hub.github.io/optiaula-io';
+
 /** Escribe un paquete: los archivos sueltos, el banco de pruebas y el ZIP. */
 async function empaquetar(opciones: {
   carpeta: string;
@@ -552,6 +556,43 @@ const zipPerfil = await empaquetar({
   titulo: perfil.titulo,
   html: paginaPerfil(perfil.titulo, perfil.enunciado, casos),
 });
+
+// ── Códigos QR para proyectar en clase ──
+
+const DESTINOS: readonly Destino[] = [
+  {
+    id: 'perfil',
+    nombre: perfil.titulo,
+    descripcion: 'Sitúe cuatro organizaciones en el continuo entre manufactura y servicios.',
+    url: `${BASE_PUBLICA}/actividades/perfil/`,
+  },
+  {
+    id: 'sistemas',
+    nombre: sistemas.titulo,
+    descripcion: 'Clasifique los elementos de la cooperativa en el modelo de sistemas.',
+    url: `${BASE_PUBLICA}/actividades/sistemas/`,
+  },
+  {
+    id: 'app',
+    nombre: 'OPTIAULA IO completo',
+    descripcion: 'Los trece módulos, la biblioteca de ejercicios y todos los laboratorios.',
+    url: `${BASE_PUBLICA}/`,
+  },
+];
+
+const carpetaQR = join(carpeta, 'qr');
+await mkdir(carpetaQR, { recursive: true });
+
+// Sueltos, para pegarlos en una diapositiva.
+for (const d of DESTINOS) {
+  await writeFile(join(carpetaQR, `${d.id}.svg`), await svgDe(d.url), 'utf8');
+}
+
+// Y la página para proyectar, que también se publica en el sitio.
+const paginaProyeccion = await paginaQR(DESTINOS);
+await writeFile(join(carpetaQR, 'index.html'), paginaProyeccion, 'utf8');
+await mkdir(join(SITIO, 'qr'), { recursive: true });
+await writeFile(join(SITIO, 'qr', 'index.html'), paginaProyeccion, 'utf8');
 
 console.log('Paquetes SCORM generados:');
 console.log(`  ${zipSistemas}`);
