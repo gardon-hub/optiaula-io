@@ -15,6 +15,16 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        /*
+         * Las actividades sueltas de `/actividades/` son páginas propias, no
+         * rutas de la aplicación. Sin esta exclusión, el respaldo de navegación
+         * del service worker devolvía `index.html` —la aplicación entera— a
+         * quien abriera la dirección terminada en barra, que es justamente la
+         * forma en que se comparte el enlace. Solo le pasaba a quien ya hubiera
+         * visitado el sitio y tuviera el service worker instalado, que es el
+         * caso de los estudiantes a los que se les manda.
+         */
+        navigateFallbackDenylist: [/\/actividades\//],
       },
       manifest: {
         name: 'OPTIAULA IO — Laboratorio Interactivo de Investigación de Operaciones',
