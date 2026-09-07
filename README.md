@@ -17,7 +17,7 @@ qué cambia, y todo termina en una **interpretación gerencial** —qué decidir
 resultado en la mano—.
 
 - **13 módulos** con teoría, glosario, fórmulas comentadas, errores frecuentes e interpretación.
-- **86 ejercicios** extraídos de los materiales del curso, con contexto agropecuario y agroindustrial.
+- **87 ejercicios** extraídos de los materiales del curso, con contexto agropecuario y agroindustrial.
 - **13 laboratorios interactivos**, uno por módulo.
 - **4 modos de uso**: estudiante, docente, proyección y evaluación.
 - **Motor de retroalimentación determinista**: reconoce los errores típicos de cada tema y explica
@@ -49,8 +49,8 @@ npm run build
 | `npm install` | Instala las dependencias |
 | `npm run dev` | Servidor de desarrollo en `http://localhost:5173` |
 | `npm run lint` | Análisis estático con oxlint (ver `.oxlintrc.json`) |
-| `npm run test` | 535 pruebas unitarias del motor matemático y de los datos |
-| `npm run test:e2e` | 108 pruebas de extremo a extremo (escritorio y teléfono) |
+| `npm run test` | 554 pruebas unitarias del motor matemático y de los datos |
+| `npm run test:e2e` | 112 pruebas de extremo a extremo (escritorio y teléfono) |
 | `npm run build` | Compila a `dist/`, verifica tipos y genera el service worker |
 | `npm run preview` | Sirve la compilación de producción |
 | `npm run typecheck` | Verificación de tipos sin compilar |
@@ -69,7 +69,7 @@ npx playwright install chromium
 
 Se abre en cualquier navegador, sin instalar nada. La publicación es automática: cada envío a `main`
 dispara el flujo de `.github/workflows/publicar.yml`, que verifica tipos, pasa el análisis estático y
-corre las 535 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
+corre las 554 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
 línea la versión anterior, que es preferible a una con un cálculo equivocado delante de la clase.
 
 ## Instalarla en el teléfono o la tableta
@@ -171,8 +171,8 @@ src/
   laboratorios/            Un laboratorio por módulo
   paginas/                 Las 18 pantallas
   export/                  CSV, Excel, JSON, portapapeles, impresión
-pruebas/                   535 pruebas unitarias
-pruebas/e2e/               108 pruebas de extremo a extremo
+pruebas/                   554 pruebas unitarias
+pruebas/e2e/               112 pruebas de extremo a extremo
 herramientas/              Generador de iconos de la PWA
 ```
 
@@ -203,8 +203,8 @@ originales, así que las decisiones nunca se encadenan.
 ## Verificación
 
 ```
-535 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
- 108 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
+554 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
+ 112 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
   0 errores de TypeScript  modo estricto, con noUncheckedIndexedAccess
 ```
 

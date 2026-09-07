@@ -364,6 +364,35 @@ export const esquemaDatosFundamentos = z.object({
     }),
   ),
   estrategiaCompetencia: z.enum(['costo', 'calidad', 'flexibilidad', 'velocidad']).nullable().default(null),
+  /**
+   * Organizaciones para el perfil de operaciones: el simulador que sitúa cada
+   * una en el continuo entre manufactura y servicios.
+   *
+   * Los ocho rasgos se escriben aquí literalmente en vez de importarlos de
+   * `nucleo/`, porque `esquemas/` no puede depender del motor. La prueba de
+   * `naturaleza` comprueba que las dos listas coincidan.
+   */
+  casosNaturaleza: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        nombre: z.string().min(1),
+        descripcion: z.string().min(1),
+        perfilReferencia: z.object({
+          tangibilidad: z.number().min(0).max(100),
+          almacenabilidad: z.number().min(0).max(100),
+          contacto: z.number().min(0).max(100),
+          simultaneidad: z.number().min(0).max(100),
+          uniformidad: z.number().min(0).max(100),
+          medicion: z.number().min(0).max(100),
+          ubicacion: z.number().min(0).max(100),
+          intensidad: z.number().min(0).max(100),
+        }),
+        /** Por qué el docente sitúa así esta organización. */
+        justificacion: z.string().min(1),
+      }),
+    )
+    .default([]),
 });
 
 export const esquemaDatosGrafico = z.object({

@@ -106,6 +106,26 @@ Los datos de compresión son **campos opcionales de la actividad** —`duracionA
 ruta crítica del material siguen intactos y el panel del laboratorio ni siquiera se dibuja cuando
 `admiteCompresion()` es falso: una tarjeta vacía sería un botón decorativo.
 
+**`naturalezaOperaciones.ts`** — Módulo 1, el perfil de operaciones. Sitúa una organización en los ocho
+rasgos con los que la bibliografía del curso contrasta manufactura y servicios y devuelve un índice
+de 0 a 100, la lectura del continuo y las **consecuencias operativas** de ese perfil.
+
+Dos decisiones que conviene no deshacer sin motivo. El índice es el **promedio simple**: ponderar
+exigiría una fuente que dijera cuánto pesa cada rasgo, y ninguna de las del curso lo dice; unos pesos
+inventados darían un número de apariencia precisa sin nada que lo sostenga. Y las consecuencias se
+emiten **solo cuando un rasgo pasa de 65 o baja de 35**: en la zona intermedia la organización
+todavía puede elegir, y afirmar ahí una consecuencia le inventaría al estudiante una restricción que
+no tiene. Hay pruebas sobre los dos cortes.
+
+El mismo rasgo en extremos opuestos produce consecuencias **contrarias**, no la ausencia de una: si
+el producto no se puede guardar, la capacidad se dimensiona al pico; si se puede, el inventario
+absorbe la variación. Eso es lo que hace que mover un control enseñe algo, y lo vigila una prueba de
+extremo a extremo.
+
+Los perfiles de referencia de los cuatro casos son criterio del docente, no medición, y están
+registrados como inconsistencia I-19: la comparación usa una tolerancia de 25 puntos por rasgo y no
+califica el perfil.
+
 **`grafico.ts`** — Programación lineal de dos variables por enumeración de vértices: se cruzan todos los
 pares de rectas (restricciones más ejes), se descartan los cruces infactibles y se evalúa el objetivo en
 los que quedan. La no acotación se detecta buscando una dirección del cono de recesión que mejore el
@@ -481,8 +501,8 @@ no la sustituye. Todo texto de un modelo debe mostrarse con `LEYENDA_GENERADO_AU
 ## 10. Pruebas
 
 ```bash
-npm run test        # 535 unitarias
-npm run test:e2e    # 108 de extremo a extremo, escritorio y teléfono
+npm run test        # 554 unitarias
+npm run test:e2e    # 112 de extremo a extremo, escritorio y teléfono
 npm run typecheck   # TypeScript estricto
 npm run lint        # análisis estático
 ```

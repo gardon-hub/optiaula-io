@@ -566,6 +566,45 @@ test('el lote económico reproduce el ejercicio de la presentación', async ({ p
     await expect(page.getByText(/^Auditoría: /)).toHaveCount(0);
   });
 
+  test('el perfil de operaciones cambia lo que enseña al mover un rasgo', async ({ page }) => {
+    // Lo que se prueba es que sea una simulación y no un cuestionario: el mismo
+    // control en extremos opuestos tiene que producir consecuencias operativas
+    // contrarias, no una etiqueta distinta.
+    await abrirLimpio(page, '#/laboratorio/fundamentos');
+    await page.getByLabel('Datos de partida').selectOption('fund-03');
+
+    await expect(page.getByRole('heading', { name: 'Perfil de operaciones' })).toBeVisible();
+
+    const almacenabilidad = page.getByLabel('Almacenabilidad');
+
+    // En el centro no se afirma ninguna consecuencia: ahí la organización
+    // todavía puede elegir y afirmar una le inventaría una restricción.
+    await expect(page.getByText(/Ningún rasgo está lo bastante marcado/)).toBeVisible();
+
+    await almacenabilidad.fill('100');
+    await expect(page.getByRole('heading', { name: 'La capacidad se dimensiona al pico, no al promedio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'El inventario absorbe la variación de la demanda' })).toHaveCount(0);
+
+    await almacenabilidad.fill('0');
+    await expect(page.getByRole('heading', { name: 'El inventario absorbe la variación de la demanda' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'La capacidad se dimensiona al pico, no al promedio' })).toHaveCount(0);
+  });
+
+  test('el perfil compara con el criterio del docente sin calificarlo', async ({ page }) => {
+    await abrirLimpio(page, '#/laboratorio/fundamentos');
+    await page.getByLabel('Datos de partida').selectOption('fund-03');
+
+    // Perfilar el beneficio de café como si fuera un servicio.
+    await page.getByLabel('Tangibilidad del producto').fill('90');
+    await page.getByRole('button', { name: 'Comparar con el criterio del docente' }).click();
+
+    await expect(page.getByText(/Criterio del docente: 5 — se aparta 85 puntos/)).toBeVisible();
+    await expect(page.getByText(/Por qué el docente sitúa así/)).toBeVisible();
+    // El texto no puede decir que el estudiante se equivocó: son criterios, no
+    // mediciones, y así quedó decidido en la auditoría (I-19).
+    await expect(page.getByText(/No significa que esté mal/).first()).toBeVisible();
+  });
+
   test('la biblioteca filtra por tema', async ({ page }) => {
     await abrirLimpio(page, '#/biblioteca');
 

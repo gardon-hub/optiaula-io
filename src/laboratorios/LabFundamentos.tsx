@@ -10,6 +10,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import type { DatosEjercicio } from '@/esquemas';
 import { Distintivo, Indicador, Tarjeta, TextoFormateado } from '@/ui/base';
 import { Interpretacion } from '@/ui/pasos';
+import { PerfilOperaciones } from './PerfilOperaciones';
 
 type Categoria = 'entrada' | 'proceso' | 'salida' | 'retroalimentacion' | 'ambiente_externo';
 
@@ -56,6 +57,7 @@ const ESTRATEGIAS: readonly { id: string; nombre: string; explicacion: string }[
 export function LabFundamentos({
   datosIniciales,
   revelarTodo,
+  ocultarResultados,
 }: {
   datosIniciales: Extract<DatosEjercicio, { tipo: 'fundamentos' }>;
   titulo: string;
@@ -341,6 +343,14 @@ export function LabFundamentos({
             </>
           )}
         </>
+      )}
+
+      {datosIniciales.casosNaturaleza.length > 0 && (
+        <PerfilOperaciones
+          casos={datosIniciales.casosNaturaleza}
+          revelarTodo={revelarTodo}
+          ocultarResultados={ocultarResultados}
+        />
       )}
 
       <Tarjeta

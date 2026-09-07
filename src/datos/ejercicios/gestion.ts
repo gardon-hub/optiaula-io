@@ -572,6 +572,7 @@ export const EJERCICIOS_FUNDAMENTOS: readonly Ejercicio[] = [
         { id: 'e18', texto: 'Sequía prolongada que reduce el forraje disponible', categoria: 'ambiente_externo' },
       ],
       estrategiaCompetencia: 'calidad',
+      casosNaturaleza: [],
     },
     preguntas: [
       {
@@ -668,6 +669,7 @@ export const EJERCICIOS_FUNDAMENTOS: readonly Ejercicio[] = [
       naturaleza: 'mixta',
       elementos: [],
       estrategiaCompetencia: null,
+      casosNaturaleza: [],
     },
     preguntas: [
       {
@@ -743,5 +745,200 @@ export const EJERCICIOS_FUNDAMENTOS: readonly Ejercicio[] = [
     semilla: null,
     creadoEn: '2025-05-29T00:00:00.000Z',
     modificadoEn: '2025-05-29T00:00:00.000Z',
+  },
+  {
+    id: 'fund-03',
+    titulo: 'Manufactura o servicio: cuatro organizaciones de Olancho',
+    tema: 'fundamentos',
+    metodo: 'Perfil de operaciones en el continuo entre manufactura y servicios',
+    contexto: 'comunitario',
+    dificultad: 'basico',
+    enunciado:
+      'La distinción entre manufactura y servicios no es una casilla que se marca: es un **conjunto de rasgos** en los ' +
+      'que una organización puede estar en un punto intermedio. Un beneficio de café está en un extremo y una clínica ' +
+      'veterinaria en el otro, pero una cooperativa que además reparte a domicilio fabrica un bien tangible y a la vez ' +
+      'atiende al cliente cara a cara.\n\n' +
+      'Sitúe cada organización en los ocho rasgos del perfil y observe **qué le obliga a hacer** cada uno. Ese es el ' +
+      'punto del ejercicio: los rasgos no son vocabulario, son restricciones que deciden cómo se administra la ' +
+      'operación —si se puede usar inventario, si la capacidad debe alcanzar para el pico, dónde conviene instalarse y ' +
+      'cómo se mide la calidad—.\n\n' +
+      'Recuerde el contraste de Russell y Taylor (2019): la manufactura produce bienes tangibles que se pueden ' +
+      'inventariar y cuya calidad se mide objetivamente; los servicios producen resultados intangibles, con contacto ' +
+      'directo con el cliente, mayor variabilidad y dificultad para medir el resultado.',
+    datos: {
+      tipo: 'fundamentos',
+      organizacion: 'Cuatro organizaciones de Olancho',
+      naturaleza: 'mixta',
+      elementos: [],
+      estrategiaCompetencia: null,
+      casosNaturaleza: [
+        {
+          id: 'beneficio',
+          nombre: 'Beneficio húmedo de café',
+          descripcion:
+            'Recibe café en uva de los productores de la zona, lo despulpa, lo fermenta, lo lava y lo seca hasta ' +
+            'pergamino. El café seco se ensaca y se guarda en bodega hasta que el exportador lo compra. El productor ' +
+            'entrega y se va; no ve el proceso.',
+          perfilReferencia: {
+            tangibilidad: 5,
+            almacenabilidad: 10,
+            contacto: 15,
+            simultaneidad: 5,
+            uniformidad: 20,
+            medicion: 10,
+            ubicacion: 20,
+            intensidad: 30,
+          },
+          justificacion:
+            'Es el extremo de manufactura. El pergamino es tangible, se guarda meses y su calidad se mide con ' +
+            'instrumento: humedad, rendimiento en oro, defectos por muestra. El productor no participa del proceso. ' +
+            'Se ubica cerca del café, no cerca del comprador. El único rasgo que se despega es la intensidad: sigue ' +
+            'necesitando bastante mano de obra en la recepción y el patio de secado.',
+        },
+        {
+          id: 'clinica',
+          nombre: 'Clínica veterinaria de campo',
+          descripcion:
+            'Un veterinario atiende ganado en las fincas: revisa el animal, diagnostica, aplica el tratamiento y ' +
+            'aconseja al productor. Cada visita es distinta según lo que encuentre, y el productor está presente ' +
+            'durante toda la consulta.',
+          perfilReferencia: {
+            tangibilidad: 90,
+            almacenabilidad: 95,
+            contacto: 95,
+            simultaneidad: 95,
+            uniformidad: 90,
+            medicion: 75,
+            ubicacion: 85,
+            intensidad: 90,
+          },
+          justificacion:
+            'Es el extremo de servicio. La consulta no se puede fabricar por anticipado ni guardar: la hora que el ' +
+            'veterinario no atiende se pierde para siempre. Se produce mientras el productor mira, cada caso es ' +
+            'distinto y el resultado depende de la persona. La medición no llega a 100 porque parte sí es objetiva: ' +
+            'el animal mejora o no mejora.',
+        },
+        {
+          id: 'cooperativa',
+          nombre: 'Cooperativa lechera con reparto',
+          descripcion:
+            'Pasteuriza y empaca leche, queso y cuajada, y además reparte a domicilio en el casco urbano con su ' +
+            'propio camión. El producto se fabrica en planta, pero el repartidor trata con el cliente todos los días ' +
+            'y escucha sus reclamos.',
+          perfilReferencia: {
+            tangibilidad: 15,
+            almacenabilidad: 35,
+            contacto: 65,
+            simultaneidad: 25,
+            uniformidad: 25,
+            medicion: 35,
+            ubicacion: 60,
+            intensidad: 50,
+          },
+          justificacion:
+            'Es el caso mixto, y es el más instructivo. Lo que vende es tangible y se mide con instrumento, así que ' +
+            'en esos rasgos es manufactura. Pero la leche dura pocos días —se almacena, aunque poco— y el reparto ' +
+            'pone al cliente en contacto diario con la organización, con lo que la calidad percibida pasa a depender ' +
+            'del trato del repartidor y no solo de la acidez del producto.',
+        },
+        {
+          id: 'comedor',
+          nombre: 'Comedor del mercado municipal',
+          descripcion:
+            'Prepara y sirve almuerzos. Cocina por adelantado lo que puede —el arroz, los frijoles, la carne en ' +
+            'salsa—, pero el plato se arma y se sirve delante del cliente, que come ahí mismo y regresa mañana si le ' +
+            'gustó.',
+          perfilReferencia: {
+            tangibilidad: 45,
+            almacenabilidad: 70,
+            contacto: 80,
+            simultaneidad: 75,
+            uniformidad: 55,
+            medicion: 80,
+            ubicacion: 90,
+            intensidad: 80,
+          },
+          justificacion:
+            'El caso que más se discute en clase. Se cocina un bien tangible, y por eso la tangibilidad queda a la ' +
+            'mitad; pero lo que el cliente compra es el almuerzo servido, que no se puede guardar de un día para ' +
+            'otro, se consume donde se produce y se juzga por el gusto. Un comedor se parece más a un servicio que a ' +
+            'una fábrica, aunque en la cocina haya un proceso de manufactura.',
+        },
+      ],
+    },
+    preguntas: [
+      {
+        id: 'p1',
+        enunciado:
+          'El comedor cocina un producto tangible, igual que el beneficio de café. ¿Por qué su perfil se parece más ' +
+          'al de la clínica veterinaria que al del beneficio?',
+        tipo: 'interpretacion',
+        respuesta: null,
+        unidad: null,
+        tolerancia: 0,
+        toleranciaRelativa: false,
+        opciones: [],
+        pistas: [
+          'Pregúntese qué pasa con el almuerzo que nadie compró hoy, y compare con el saco de pergamino que nadie compró hoy.',
+          'La tangibilidad es uno de ocho rasgos, y los otros siete pueden apuntar al lado contrario.',
+        ],
+        claveVerificacion: null,
+        puntos: 3,
+      },
+      {
+        id: 'p2',
+        enunciado:
+          'La cooperativa no puede guardar la leche muchos días y el productor la recibe en su casa. ¿Qué dos ' +
+          'decisiones de operaciones le cambian por eso, comparada con el beneficio de café?',
+        tipo: 'interpretacion',
+        respuesta: null,
+        unidad: null,
+        tolerancia: 0,
+        toleranciaRelativa: false,
+        opciones: [],
+        pistas: [
+          'Piense en para qué sirve el inventario cuando la demanda sube y baja, y qué queda si no puede usarlo.',
+          'Piense también en dónde conviene instalarse cuando alguien de la organización tiene que llegar al cliente.',
+        ],
+        claveVerificacion: null,
+        puntos: 3,
+      },
+      {
+        id: 'p3',
+        enunciado:
+          '¿Por qué el ejercicio no le pide clasificar cada organización como «manufactura» o «servicio» y en cambio ' +
+          'le pide situarla en ocho rasgos?',
+        tipo: 'interpretacion',
+        respuesta: null,
+        unidad: null,
+        tolerancia: 0,
+        toleranciaRelativa: false,
+        opciones: [],
+        pistas: [
+          'Mire el perfil de la cooperativa: ¿en qué rasgos se comporta como fábrica y en cuáles como servicio?',
+          'La etiqueta no dice qué hacer; el rasgo sí. ¿Cuál de las dos cosas necesita el gerente?',
+        ],
+        claveVerificacion: null,
+        puntos: 2,
+      },
+    ],
+    moneda: null,
+    unidades: [],
+    tiempoEstimadoMinutos: 30,
+    origen: 'derivado',
+    validacion: 'verificado',
+    fuenteId: 'doc-fundamentos',
+    atribucion: 'Construido sobre el contraste manufactura/servicios del documento de fundamentos',
+    inconsistencias: ['I-19'],
+    notasDocente:
+      'Los ocho rasgos son los que la bibliografía del curso usa para contrastar manufactura y servicios; no se agregó ' +
+      'ninguna fuente nueva. Las cuatro organizaciones y sus perfiles de referencia los construí como casos de ' +
+      'práctica: no provienen de ningún material del curso, y por eso el ejercicio está marcado como derivado y ' +
+      'registrado en la auditoría (I-19). Los valores del perfil son un criterio didáctico, no una medición: el ' +
+      'ejercicio los trata como referencia para conversar, con tolerancia de 25 puntos por rasgo. Si su criterio ' +
+      'difiere, edítelos desde el panel docente.',
+    semilla: null,
+    creadoEn: '2026-09-06T00:00:00.000Z',
+    modificadoEn: '2026-09-06T00:00:00.000Z',
   },
 ];

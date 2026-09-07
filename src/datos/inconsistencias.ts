@@ -586,4 +586,39 @@ export const INCONSISTENCIAS_INICIALES: readonly Inconsistencia[] = [
     decision: 'estandar',
     decididoEn: '2026-08-29T00:00:00.000Z',
   },
+  {
+    id: 'I-19',
+    ejercicioId: 'fund-03',
+    titulo: 'Los perfiles del simulador de manufactura y servicios son criterio propio',
+    descripcion:
+      'Los **ocho rasgos** con los que el simulador contrasta manufactura y servicios son los que usa la bibliografía ' +
+      'del curso —tangibilidad, almacenabilidad, contacto con el cliente, simultaneidad, uniformidad, medición de la ' +
+      'calidad, criterio de ubicación e intensidad de los recursos—. No se agregó ninguna fuente nueva.\n\n' +
+      'Lo que **no** proviene de ningún material son las cuatro organizaciones y el valor que se le asigna a cada una ' +
+      'en cada rasgo. Los construí como casos de práctica, y los números son un criterio didáctico, no una medición: ' +
+      'nadie ha medido que el contacto con el cliente de un comedor sea 80 y no 75.\n\n' +
+      'Por eso el ejercicio compara con una tolerancia de 25 puntos por rasgo y no califica el perfil como si hubiera ' +
+      'una respuesta exacta. Lo que sí es exacto es la dirección: que la clínica esté arriba y el beneficio abajo no ' +
+      'admite discusión.',
+    archivoOrigen: 'Ninguno: caso construido sobre el marco teórico del documento de fundamentos',
+    gravedad: 'baja',
+    opciones: [
+      {
+        id: 'referencia',
+        descripcion: 'Tratar los perfiles como referencia para conversar, con tolerancia de 25 puntos por rasgo',
+        efecto:
+          'El estudiante ve en qué rasgos se aparta del criterio del docente y por qué, pero el ejercicio no le dice ' +
+          'que su perfil está mal. Las preguntas que se califican son de interpretación. Es lo vigente.',
+      },
+      {
+        id: 'exacto',
+        descripcion: 'Calificar el perfil comparándolo con los valores de referencia',
+        efecto:
+          'Convertiría un criterio didáctico en una clave de respuestas. Daría una nota de apariencia objetiva sobre ' +
+          'números que nadie midió.',
+      },
+    ],
+    decision: 'referencia',
+    decididoEn: '2026-09-06T00:00:00.000Z',
+  },
 ];

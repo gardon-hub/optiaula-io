@@ -49,7 +49,7 @@ describe('las cuatro decisiones quedaron tomadas', () => {
     // que se pueda sostener, y ponerles una inventada sería falsear el
     // registro. La pantalla de auditoría ya contempla el caso sin fecha.
     const conFecha = INCONSISTENCIAS_INICIALES.filter((i) => i.decididoEn !== null).map((i) => i.id);
-    expect(conFecha).toEqual(['I-01', 'I-02', 'I-03', 'I-04', 'I-06', 'I-07', 'I-12', 'I-13', 'I-14', 'I-16', 'I-18']);
+    expect(conFecha).toEqual(['I-01', 'I-02', 'I-03', 'I-04', 'I-06', 'I-07', 'I-12', 'I-13', 'I-14', 'I-16', 'I-18', 'I-19']);
   });
 
   it('las cuatro que faltaban quedaron como las decidió el docente', () => {

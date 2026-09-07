@@ -323,14 +323,14 @@ a:not(.boton) {
   }
 
   /*
-   * Los botones pequeños miden unos 26 px de alto, cómodos con el ratón y
-   * escasos para un pulgar: Android e iOS piden alrededor de 44. En vez de
+   * Los botones miden entre 26 y 36 px de alto, cómodos con el ratón y escasos
+   * para un pulgar: Android e iOS piden alrededor de 44. En vez de
    * decidirlo por el ancho de la pantalla —una tableta apaisada es ancha y se
    * toca igual— se decide por el tipo de puntero, que es la pregunta real.
    * Solo crece el área de toque: el texto y los colores no cambian.
    */
   @media (pointer: coarse) {
-    .boton-pequeno,
+    .boton,
     .boton-modo {
       min-height: 2.75rem;
     }
