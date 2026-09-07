@@ -29,4 +29,4 @@ yarn-error.log*
 .claude/
 
 # Paquete de Moodle generado (npm run moodle)
-moodle/
+/moodle/
