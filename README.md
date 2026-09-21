@@ -239,4 +239,5 @@ programación del ciclo, que no identifica a nadie.
 
 ## Licencia y uso
 
-Material didáctico de la Universidad Nacional de Agricultura. El contenido académico es del autor.
+Material didáctico de la Universidad Nacional de Agricultura. Código y contenido se distribuyen bajo
+licencia MIT: véase [LICENSE](LICENSE).
