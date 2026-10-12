@@ -573,6 +573,13 @@ const DESTINOS: readonly Destino[] = [
     url: `${BASE_PUBLICA}/actividades/sistemas/`,
   },
   {
+    id: 'equilibrio',
+    nombre: 'Punto de equilibrio',
+    descripcion:
+      'El módulo 5 completo: teoría, laboratorio con gráfica, multiproducto y los diez ejercicios del curso.',
+    url: `${BASE_PUBLICA}/equilibrio/`,
+  },
+  {
     id: 'app',
     nombre: 'OPTIAULA IO completo',
     descripcion: 'Los trece módulos, la biblioteca de ejercicios y todos los laboratorios.',

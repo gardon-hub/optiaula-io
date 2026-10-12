@@ -79,6 +79,7 @@ const decodificar = (svg: string): string | null => {
 const DIRECCIONES = [
   'https://gardon-hub.github.io/optiaula-io/actividades/perfil/',
   'https://gardon-hub.github.io/optiaula-io/actividades/sistemas/',
+  'https://gardon-hub.github.io/optiaula-io/equilibrio/',
   'https://gardon-hub.github.io/optiaula-io/',
 ];
 

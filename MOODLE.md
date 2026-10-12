@@ -121,8 +121,11 @@ Hay una página con los códigos QR de las tres direcciones, pensada para el ca�
 Se cambia de código con las flechas o con los botones de abajo, **F** la pone a pantalla completa y
 **Ctrl+P** imprime una hoja por código, para pegarla en el aula.
 
+Lleva cuatro códigos: las dos actividades sueltas, la copia de punto de equilibrio y la aplicación
+completa.
+
 Los códigos sueltos, por si prefiere pegarlos en una diapositiva, quedan en `moodle/qr/` como SVG:
-`perfil.svg`, `sistemas.svg` y `app.svg`. Son vectoriales, así que se agrandan sin pixelarse.
+`perfil.svg`, `sistemas.svg`, `equilibrio.svg` y `app.svg`. Son vectoriales, así que se agrandan sin pixelarse.
 
 Se generan con `npm run moodle`, sin llamar a ningún servicio: un QR pedido a una API dejaría de
 funcionar el día que el aula no tenga internet, que es justo cuando hace falta. Van con corrección de
