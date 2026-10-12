@@ -61,7 +61,13 @@ jobs:
         # La dirección de Pages incluye el nombre del repositorio como carpeta.
         # `base` relativo hace que los recursos se resuelvan desde ahí sin
         # depender de cuál sea ese nombre.
-        run: npm run build
+        #
+        # Son dos compilaciones de la misma base de código: la aplicación
+        # completa y la copia de punto de equilibrio, que queda en
+        # `dist/equilibrio/`. El orden importa: la completa se compila primero,
+        # así su service worker se genera antes de que exista la subcarpeta y no
+        # se lleva al caché los archivos de la otra.
+        run: npm run build:todo
 
       # Desde la versión 4 esta acción no incluye los archivos ocultos en el
       # artefacto. La compilación no genera ninguno, así que no nos afecta; si

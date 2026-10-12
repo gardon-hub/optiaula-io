@@ -14,7 +14,9 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "iconos": "node herramientas/generar-iconos.mjs",
-    "moodle": "vite-node herramientas/moodle-scorm.mts"
+    "moodle": "vite-node herramientas/moodle-scorm.mts",
+    "build:equilibrio": "cross-env VITE_TEMAS=equilibrio vite build",
+    "build:todo": "npm run build && npm run build:equilibrio"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +43,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.1",
+    "cross-env": "^10.1.0",
     "jsdom": "^30.0.1",
     "jsqr": "^1.4.0",
     "oxlint": "^1.80.0",

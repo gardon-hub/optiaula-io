@@ -8,11 +8,11 @@ import {
   NOMBRE_CONTEXTO,
   NOMBRE_DIFICULTAD,
   NOMBRE_TEMA,
-  TEMAS,
   type Contexto,
   type Dificultad,
   type Tema,
 } from '@/esquemas';
+import { TEMAS_ACTIVOS } from '@/config/alcance';
 import { usarTienda } from '@/almacen/tienda';
 import { enlaces } from '@/rutas';
 import { CampoTexto, Distintivo, Seccion, Selector, Tarjeta, Vacio } from '@/ui/base';
@@ -26,7 +26,7 @@ export function BibliotecaEjercicios(): ReactNode {
   const temaInicial = (): Tema | 'todos' => {
     const consulta = window.location.hash.split('?')[1] ?? '';
     const valor = new URLSearchParams(consulta).get('tema');
-    return valor !== null && (TEMAS as readonly string[]).includes(valor) ? (valor as Tema) : 'todos';
+    return valor !== null && (TEMAS_ACTIVOS as readonly string[]).includes(valor) ? (valor as Tema) : 'todos';
   };
 
   const [busqueda, setBusqueda] = useState('');
@@ -111,7 +111,7 @@ export function BibliotecaEjercicios(): ReactNode {
           <Selector
             etiqueta="Tema"
             valor={tema}
-            opciones={[{ valor: 'todos' as const, texto: 'Todos los temas' }, ...TEMAS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))]}
+            opciones={[{ valor: 'todos' as const, texto: 'Todos los temas' }, ...TEMAS_ACTIVOS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))]}
             alCambiar={(v) => setTema(v as Tema | 'todos')}
           />
           <Selector

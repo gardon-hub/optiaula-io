@@ -6,7 +6,8 @@
 
 import type { ReactNode } from 'react';
 import { IDENTIDAD, ubicacionCompleta } from '@/config/identidad';
-import { NOMBRE_TEMA, NUMERO_MODULO, TEMAS } from '@/esquemas';
+import { NOMBRE_TEMA, NUMERO_MODULO } from '@/esquemas';
+import { MODULO_UNICO, TEMAS_ACTIVOS, cuentaDeModulos } from '@/config/alcance';
 import {
   intentosDelPerfil,
   perfilActual,
@@ -41,7 +42,7 @@ export function PaginaInicio(): ReactNode {
           {/* El número sale de los datos, como el de ejercicios: escrito a mano
               decía «Diez» mientras el panel de abajo, en la misma pantalla,
               contaba trece. */}
-          {TEMAS.length} módulos, un laboratorio interactivo por tema y una biblioteca de {tienda.ejercicios.length} ejercicios con
+          {cuentaDeModulos()}, un laboratorio interactivo por tema y una biblioteca de {tienda.ejercicios.length} ejercicios con
           contexto agropecuario y agroindustrial. Cada método se explica paso a paso, se puede manipular, y termina en una
           interpretación gerencial: qué decidiría alguien con ese resultado en la mano.
         </p>
@@ -64,7 +65,7 @@ export function PaginaInicio(): ReactNode {
           }
         >
           <div className="grid gap-3 sm:grid-cols-3">
-            <Indicador etiqueta="Progreso general" valor={`${general} %`} tono={general >= 70 ? 'bien' : 'acento'} nota={`Promedio de los ${TEMAS.length} módulos`} />
+            <Indicador etiqueta="Progreso general" valor={`${general} %`} tono={general >= 70 ? 'bien' : 'acento'} nota={`Promedio de ${cuentaDeModulos()}`} />
             <Indicador etiqueta="Ejercicios resueltos" valor={intentos.filter((i) => i.completado).length} nota={`de ${tienda.ejercicios.length} disponibles`} />
             <Indicador
               etiqueta="Próxima actividad"
@@ -110,7 +111,7 @@ export function PaginaInicio(): ReactNode {
 
       <Seccion
         titulo="Acceso rápido a los laboratorios"
-        eyebrow={`Los ${TEMAS.length} módulos`}
+        eyebrow={MODULO_UNICO === null ? `Los ${TEMAS_ACTIVOS.length} módulos` : 'El módulo'}
         descripcion="Cada laboratorio permite manipular los datos y ver cómo cambia el resultado, con el procedimiento completo explicado paso a paso."
         acciones={
           <a href={enlaces.modulos} className="boton boton-secundario boton-pequeno no-underline">
@@ -119,7 +120,7 @@ export function PaginaInicio(): ReactNode {
         }
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {TEMAS.map((tema) => {
+          {TEMAS_ACTIVOS.map((tema) => {
             const progreso = tienda.progreso.find((p) => p.tema === tema);
             const cantidad = tienda.ejercicios.filter((e) => e.tema === tema).length;
             return (

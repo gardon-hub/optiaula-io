@@ -4,7 +4,8 @@
  */
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { NOMBRE_TEMA, TEMAS, type Tema } from '@/esquemas';
+import { NOMBRE_TEMA, type Tema } from '@/esquemas';
+import { TEMAS_ACTIVOS, cuentaDeModulos } from '@/config/alcance';
 import { contenidoDe } from '@/datos/modulos';
 import { enlaces } from '@/rutas';
 import { CampoTexto, Distintivo, Plegable, Seccion, Selector, Tarjeta, TextoFormateado } from '@/ui/base';
@@ -21,7 +22,7 @@ export function PaginaAyuda(): ReactNode {
         .replace(/[̀-ͯ]/g, '');
     const texto = normalizar(busqueda);
 
-    return TEMAS.filter((t) => tema === 'todos' || t === tema)
+    return TEMAS_ACTIVOS.filter((t) => tema === 'todos' || t === tema)
       .flatMap((t) => contenidoDe(t).glosario.map((g) => ({ ...g, tema: t })))
       .filter((g) => texto === '' || normalizar(g.termino).includes(texto) || normalizar(g.definicion).includes(texto))
       .sort((a, b) => a.termino.localeCompare(b.termino, 'es'));
@@ -31,7 +32,7 @@ export function PaginaAyuda(): ReactNode {
     <Seccion
       titulo="Ayuda y glosario"
       eyebrow="Cómo usar OPTIAULA IO"
-      descripcion={`Guía rápida de los cuatro modos de uso y glosario completo de los ${TEMAS.length} módulos.`}
+      descripcion={`Guía rápida de los cuatro modos de uso y glosario completo de ${cuentaDeModulos()}.`}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Tarjeta titulo="Modo estudiante" descripcion="El modo por defecto.">
@@ -127,14 +128,14 @@ export function PaginaAyuda(): ReactNode {
 
       <Tarjeta
         titulo="Glosario general"
-        descripcion={`${terminos.length} término(s) de los ${TEMAS.length} módulos.`}
+        descripcion={`${terminos.length} término(s) de ${cuentaDeModulos()}.`}
       >
         <div className="mb-4 grid gap-3 sm:grid-cols-2">
           <CampoTexto etiqueta="Buscar término" valor={busqueda} alCambiar={setBusqueda} marcador="holgura, margen, degeneración…" />
           <Selector
             etiqueta="Filtrar por módulo"
             valor={tema}
-            opciones={[{ valor: 'todos' as const, texto: 'Todos los módulos' }, ...TEMAS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))]}
+            opciones={[{ valor: 'todos' as const, texto: 'Todos los módulos' }, ...TEMAS_ACTIVOS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))]}
             alCambiar={(v) => setTema(v as Tema | 'todos')}
           />
         </div>

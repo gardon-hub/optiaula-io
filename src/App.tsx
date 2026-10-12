@@ -4,7 +4,8 @@
 
 import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react';
 import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
-import { NOMBRE_TEMA, NUMERO_MODULO, TEMAS, type Tema } from '@/esquemas';
+import { NOMBRE_TEMA, NUMERO_MODULO, type Tema } from '@/esquemas';
+import { MODULO_UNICO, TEMAS_ACTIVOS, cuentaDeModulos } from '@/config/alcance';
 import { inconsistenciasPendientes, perfilActual, progresoGeneral, usarTienda, type Modo } from '@/almacen/tienda';
 import { bandejaDeRevision } from '@/nucleo/revision';
 import { enlaces, irA, usarRuta } from '@/rutas';
@@ -49,6 +50,14 @@ export function App(): ReactNode {
   useEffect(() => {
     void tienda.iniciar();
   }, [tienda]);
+
+  // `index.html` es el mismo archivo para las dos compilaciones, así que la
+  // copia de un módulo heredaba el título de la aplicación completa: en la
+  // pestaña y en el marcador decía que llevaba los trece.
+  useEffect(() => {
+    if (MODULO_UNICO === null) return;
+    document.title = `${NOMBRE_TEMA[MODULO_UNICO]} — ${IDENTIDAD.nombre}`;
+  }, []);
 
   // El tema y el modo se reflejan en el elemento raíz: el CSS hace el resto.
   useEffect(() => {
@@ -135,7 +144,7 @@ export function App(): ReactNode {
 }
 
 function Pantalla({ nombre, parametro }: { nombre: ReturnType<typeof usarRuta>['nombre']; parametro: string | null }): ReactNode {
-  const esTema = (v: string | null): v is Tema => v !== null && (TEMAS as readonly string[]).includes(v);
+  const esTema = (v: string | null): v is Tema => v !== null && (TEMAS_ACTIVOS as readonly string[]).includes(v);
 
   switch (nombre) {
     case 'inicio': return <PaginaInicio />;
@@ -219,7 +228,7 @@ function BarraSuperior({
               {IDENTIDAD.nombre}
             </span>
             <span className="hidden truncate text-[0.6875rem] sm:block" style={{ color: 'var(--tinta-tenue)' }}>
-              {IDENTIDAD.subtitulo}
+              {MODULO_UNICO === null ? IDENTIDAD.subtitulo : NOMBRE_TEMA[MODULO_UNICO]}
             </span>
           </span>
         </a>
@@ -356,7 +365,7 @@ function NavegacionLateral({
             {progreso} %
           </span>
           <span className="text-[0.6875rem]" style={{ color: 'var(--tinta-tenue)' }}>
-            {`de los ${TEMAS.length} módulos`}
+            {`de ${cuentaDeModulos()}`}
           </span>
         </div>
       </div>
@@ -366,7 +375,7 @@ function NavegacionLateral({
       <div className="mt-4">
         <p className="etiqueta mb-1.5 px-2">Módulos</p>
         <ul className="flex flex-col gap-0.5">
-          {TEMAS.map((tema) => (
+          {TEMAS_ACTIVOS.map((tema) => (
             <li key={tema}>
               <a
                 href={enlaces.modulo(tema)}

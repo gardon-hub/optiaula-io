@@ -8,6 +8,7 @@
  */
 
 import { esquemaEjercicio, validar, type Ejercicio, type Tema } from '@/esquemas';
+import { enAlcance } from '@/config/alcance';
 import { EJERCICIOS_PRODUCTIVIDAD } from './productividad';
 import { EJERCICIOS_ASIGNACION } from './asignacion';
 import { EJERCICIOS_TRANSPORTE } from './transporte';
@@ -64,7 +65,13 @@ function cargar(): CargaBiblioteca {
 
 const CARGA = cargar();
 
-export const BIBLIOTECA_INICIAL: readonly Ejercicio[] = CARGA.ejercicios;
+/*
+ * La biblioteca se recorta al alcance de la compilación. Se filtra **después**
+ * de validar y no antes: así una copia de un solo módulo sigue informando de
+ * los ejercicios rechazados de todos, y el panel de auditoría no se queda
+ * callado sobre un dato malo solo porque ese módulo no se muestre aquí.
+ */
+export const BIBLIOTECA_INICIAL: readonly Ejercicio[] = CARGA.ejercicios.filter((e) => enAlcance(e.tema));
 export const EJERCICIOS_RECHAZADOS = CARGA.rechazados;
 
 export function ejerciciosDeTema(tema: Tema, biblioteca: readonly Ejercicio[] = BIBLIOTECA_INICIAL): Ejercicio[] {

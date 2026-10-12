@@ -10,7 +10,6 @@ import {
   NOMBRE_CONTEXTO,
   NOMBRE_DIFICULTAD,
   NOMBRE_TEMA,
-  TEMAS,
   esquemaEjercicio,
   validar,
   type Contexto,
@@ -18,6 +17,7 @@ import {
   type Ejercicio,
   type Tema,
 } from '@/esquemas';
+import { TEMAS_ACTIVOS } from '@/config/alcance';
 import { inconsistenciasPendientes, usarTienda } from '@/almacen/tienda';
 import { nuevoId } from '@/almacen/baseDatos';
 import { BIBLIOTECA_INICIAL } from '@/datos/ejercicios';
@@ -412,7 +412,7 @@ function EditorEjercicio({
           <Selector
             etiqueta="Tema"
             valor={borrador.tema}
-            opciones={TEMAS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))}
+            opciones={TEMAS_ACTIVOS.map((t) => ({ valor: t, texto: NOMBRE_TEMA[t] }))}
             alCambiar={(v) => setBorrador((s) => ({ ...s, tema: v as Tema }))}
             ayuda="El tema debe corresponder al tipo de datos del ejercicio."
           />

@@ -6,7 +6,8 @@ import type { ReactNode } from 'react';
 import { IDENTIDAD, autorConGrado, ubicacionCompleta } from '@/config/identidad';
 import { FUENTES } from '@/datos/fuentes';
 import { usarTienda } from '@/almacen/tienda';
-import { NOMBRE_TEMA, TEMAS } from '@/esquemas';
+import { NOMBRE_TEMA } from '@/esquemas';
+import { TEMAS_ACTIVOS } from '@/config/alcance';
 import { enlaces } from '@/rutas';
 import { Distintivo, Indicador, Seccion, Tarjeta } from '@/ui/base';
 
@@ -100,7 +101,7 @@ export function PaginaCreditos(): ReactNode {
               </tr>
             </thead>
             <tbody>
-              {TEMAS.map((tema) => {
+              {TEMAS_ACTIVOS.map((tema) => {
                 const del = tienda.ejercicios.filter((e) => e.tema === tema);
                 return (
                   <tr key={tema}>

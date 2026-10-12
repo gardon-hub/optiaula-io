@@ -24,6 +24,7 @@ import {
   TEMAS,
 } from '@/esquemas';
 import { BIBLIOTECA_INICIAL } from '@/datos/ejercicios';
+import { TEMAS_ACTIVOS, enAlcance } from '@/config/alcance';
 import { INCONSISTENCIAS_INICIALES } from '@/datos/inconsistencias';
 import { IDENTIDAD } from '@/config/identidad';
 import { aplicarRevision } from '@/nucleo/revision';
@@ -427,14 +428,20 @@ export function intentosDelPerfil(estado: Estado, perfilId: string | null): Inte
 }
 
 export function progresoGeneral(estado: Estado): number {
-  if (estado.progreso.length === 0) return 0;
-  return Math.round(estado.progreso.reduce((s, p) => s + p.dominio, 0) / estado.progreso.length);
+  // Se promedia sobre los módulos **de esta compilación**, no sobre los trece:
+  // en una copia de un solo módulo, dividir entre trece daría un progreso que
+  // jamás pasaría del 8 % por bien que le fuera al estudiante.
+  const propios = estado.progreso.filter((p) => enAlcance(p.tema));
+  if (propios.length === 0) return 0;
+  return Math.round(propios.reduce((s, p) => s + p.dominio, 0) / propios.length);
 }
 
 /** Tema recomendado: el primero del orden del curso cuyo dominio sea bajo. */
 export function temaRecomendado(estado: Estado): Tema {
-  const pendiente = TEMAS.find((t) => (estado.progreso.find((p) => p.tema === t)?.dominio ?? 0) < 70);
-  return pendiente ?? 'transporte';
+  const pendiente = TEMAS_ACTIVOS.find((t) => (estado.progreso.find((p) => p.tema === t)?.dominio ?? 0) < 70);
+  // Si todos van bien se recomienda el último del alcance, no uno que esta
+  // copia ni siquiera muestra.
+  return pendiente ?? TEMAS_ACTIVOS[TEMAS_ACTIVOS.length - 1] ?? 'equilibrio';
 }
 
 export function ultimoTemaVisitado(estado: Estado): Tema | null {

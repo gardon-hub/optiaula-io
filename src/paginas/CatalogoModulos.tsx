@@ -3,7 +3,8 @@
  */
 
 import type { ReactNode } from 'react';
-import { NOMBRE_TEMA, NUMERO_MODULO, TEMAS } from '@/esquemas';
+import { NOMBRE_TEMA, NUMERO_MODULO } from '@/esquemas';
+import { TEMAS_ACTIVOS } from '@/config/alcance';
 import { usarTienda } from '@/almacen/tienda';
 import { contenidoDe } from '@/datos/modulos';
 import { enlaces } from '@/rutas';
@@ -19,7 +20,7 @@ export function CatalogoModulos(): ReactNode {
       descripcion="Cada módulo sigue la misma secuencia: explorar, comprender, ver un ejemplo resuelto, practicar con orientación, resolver un desafío, interpretar el resultado, autoevaluarse y generar un reporte."
     >
       <div className="flex flex-col gap-3">
-        {TEMAS.map((tema) => {
+        {TEMAS_ACTIVOS.map((tema) => {
           const contenido = contenidoDe(tema);
           const progreso = tienda.progreso.find((p) => p.tema === tema);
           const ejercicios = tienda.ejercicios.filter((e) => e.tema === tema);

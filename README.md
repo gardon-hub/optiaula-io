@@ -49,7 +49,7 @@ npm run build
 | `npm install` | Instala las dependencias |
 | `npm run dev` | Servidor de desarrollo en `http://localhost:5173` |
 | `npm run lint` | Análisis estático con oxlint (ver `.oxlintrc.json`) |
-| `npm run test` | 589 pruebas unitarias del motor matemático y de los datos |
+| `npm run test` | 599 pruebas unitarias del motor matemático y de los datos |
 | `npm run test:e2e` | 116 pruebas de extremo a extremo (escritorio y teléfono) |
 | `npm run build` | Compila a `dist/`, verifica tipos y genera el service worker |
 | `npm run preview` | Sirve la compilación de producción |
@@ -69,7 +69,7 @@ npx playwright install chromium
 
 Se abre en cualquier navegador, sin instalar nada. La publicación es automática: cada envío a `main`
 dispara el flujo de `.github/workflows/publicar.yml`, que verifica tipos, pasa el análisis estático y
-corre las 589 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
+corre las 599 pruebas del motor **antes** de publicar. Si una prueba falla, no se publica: queda en
 línea la versión anterior, que es preferible a una con un cálculo equivocado delante de la clase.
 
 ## Instalarla en el teléfono o la tableta
@@ -106,6 +106,26 @@ HTTP no cumple ninguna de las dos. Para instalarla hay que usar la dirección pu
 Basta con servir el contenido de `dist/` desde cualquier servidor de archivos estáticos con HTTPS.
 Las rutas usan el fragmento de la URL (`#/`), así que no hace falta configuración de reescritura, y
 `base` es relativo, así que funciona igual en la raíz del dominio o en una subcarpeta.
+
+## Publicar un solo módulo
+
+La misma base de código produce la aplicación completa o una copia con un solo módulo. Lo decide la
+variable `VITE_TEMAS` al compilar:
+
+```bash
+npm run build:todo
+```
+
+Deja `dist/` con los trece módulos y `dist/equilibrio/` con solo punto de equilibrio: su propia
+portada, su propio nombre instalable y su biblioteca recortada a los diez ejercicios del tema. La
+copia es una aplicación completa en lo suyo —teoría, laboratorio con gráfica, multiproducto,
+retroalimentación y reportes—, instalable y sin conexión igual que la grande.
+
+Para otro módulo basta cambiar la variable: `VITE_TEMAS=cpm npm run build`. Si quiere que se publique
+sola, agréguela a `build:todo` y dele un nombre en `NOMBRES_PARCIALES` de `vite.config.ts`.
+
+**Lo que la copia no hace:** no califica en Moodle —para eso están los paquetes SCORM— y no pesa
+menos que la completa: el recorte es de lo que se muestra, no del código que se descarga.
 
 ## Llevarlo a Moodle
 
@@ -172,7 +192,7 @@ src/
   laboratorios/            Un laboratorio por módulo
   paginas/                 Las 18 pantallas
   export/                  CSV, Excel, JSON, portapapeles, impresión
-pruebas/                   589 pruebas unitarias
+pruebas/                   599 pruebas unitarias
 pruebas/e2e/               116 pruebas de extremo a extremo
 herramientas/              Generador de iconos de la PWA
 ```
@@ -204,7 +224,7 @@ originales, así que las decisiones nunca se encadenan.
 ## Verificación
 
 ```
-589 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
+599 pruebas unitarias    motor matemático, biblioteca de datos, retroalimentación y generador
  116 pruebas e2e          recorridos de estudiante y docente, en escritorio y teléfono
   0 errores de TypeScript  modo estricto, con noUncheckedIndexedAccess
 ```
